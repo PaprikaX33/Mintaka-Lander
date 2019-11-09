@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cmath>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -9,9 +10,10 @@ int main(int argc, char ** argv)
     std::cout << argv[i] << ' ';
   }
   std::cout << '\n';
-  sf::RenderWindow window{sf::VideoMode(800.0f, 800.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close};
+  sf::RenderWindow window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close};
   sf::View viewP{sf::FloatRect{0.0f, 0.0f, 800.0f, 800.0f}};
   sf::Text info;
+  sf::Clock clock;
   sf::Font font;
   if(!font.loadFromFile("./font/UbuntuMono-B.ttf")){
     std::cerr << "Unable to open font\n";
@@ -25,7 +27,8 @@ int main(int argc, char ** argv)
 
   while(window.isOpen()){
     std::stringstream stream;
-    stream << "FPS:\t" << "10" <<'\n';
+    stream << "FPS:\t" << std::round(1.0f / clock.getElapsedTime().asSeconds()) <<'\n';
+    clock.restart();
     info.setString(stream.str());
     sf::Event winEvent;
     while(window.pollEvent(winEvent)){
