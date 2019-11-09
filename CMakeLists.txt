@@ -10,18 +10,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-#add_compile_definitions(
-#  VER_MAJOR=${PROJECT_VERSION_MAJOR}
-#  VER_MINOR=${PROJECT_VERSION_MINOR}
-#  VER_PATCH=${PROJECT_VERSION_PATCH}
-#  )
-
-
 ## If you want to link SFML statically
 # set(SFML_STATIC_LIBRARIES TRUE)
 
 ## In most cases better set in the CMake cache
 # set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
+
+add_custom_target(link_font ALL
+  COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/font ${CMAKE_BINARY_DIR}/font)
 
 set(EXECUTABLE_NAME ${PROJECT_NAME}
   CACHE STRING "Executable's name")
