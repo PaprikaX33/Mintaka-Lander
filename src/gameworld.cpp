@@ -8,7 +8,8 @@
 
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
-  _port{sf::FloatRect{0.0f, 0.0f, 800.0f, 800.0f}}
+  _port{sf::FloatRect{0.0f, 0.0f, 800.0f, 800.0f}},
+  _clock{}
 {
   _window.setFramerateLimit(60);
 }
@@ -21,16 +22,17 @@ int GameWorld::run()
     std::cerr << "Unable to open font\n";
     return -1;
   }
+  info.setFont(font);
+  info.setCharacterSize(30);
+  info.setFillColor(sf::Color::Red);
+  info.setPosition(10,10);
+  _clock.restart();
   while(_window.isOpen()){
     std::stringstream stream;
     stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
     _clock.restart();
     info.setString(stream.str());
     sf::Event winEvent;
-    info.setFont(font);
-    info.setCharacterSize(30);
-    info.setFillColor(sf::Color::Red);
-    info.setPosition(10,10);
     while(_window.pollEvent(winEvent)){
       switch(winEvent.type){
       case sf::Event::Closed:
