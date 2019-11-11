@@ -16,16 +16,15 @@ GameWorld::GameWorld():
 int GameWorld::run()
 {
   sf::Text info;
-  sf::Clock clock;
   sf::Font font;
-  if(!font.loadFromFile("./font/UbuntuMono-B.ttf")){
+  if(!font.loadFromFile("./font/TheFont.ttf")){
     std::cerr << "Unable to open font\n";
     return -1;
   }
   while(_window.isOpen()){
     std::stringstream stream;
-    stream << "FPS:\t" << std::round(1.0f / clock.getElapsedTime().asSeconds()) <<'\n';
-    clock.restart();
+    stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
+    _clock.restart();
     info.setString(stream.str());
     sf::Event winEvent;
     info.setFont(font);

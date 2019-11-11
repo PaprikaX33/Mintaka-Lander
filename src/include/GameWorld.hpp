@@ -8,6 +8,7 @@ class GameWorld
 private:
   sf::RenderWindow _window;
   sf::View _port;
+  sf::Clock _clock;
 private:
   GameWorld(GameWorld const &) = delete;
   GameWorld(GameWorld &&) = delete;
