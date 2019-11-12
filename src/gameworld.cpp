@@ -5,16 +5,18 @@
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
 
-
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
   _port{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _clock{},
-  _player{sf::Vector2f{10.0f, 10.0f}}
+  _player{sf::Vector2f{10.0f, 10.0f}},
+  _background{sf::Vector2f{1000.0f, 1000.0f}}
 {
   _window.setFramerateLimit(60);
   _player.setPosition(sf::Vector2f{100.0f,100.0f});
-  _player.setFillColor(sf::Color::Black);
+  _player.setFillColor(sf::Color::Red);
+  _background.setPosition(sf::Vector2f{0.0f,0.0f});
+  _background.setFillColor(sf::Color::Black);
   this->resize_viewport();
 }
 
@@ -22,7 +24,6 @@ int GameWorld::run()
 {
   sf::Text info;
   sf::Font font;
-  sf::Color resetCol{51, 77, 77, 255};
   if(!font.loadFromFile("./font/TheFont.ttf")){
     std::cerr << "Unable to open font\n";
     return -1;
@@ -60,17 +61,12 @@ int GameWorld::run()
         break;
       }
     }
-    _player.move(0.0f, 1.0f);
-    if(_player.getPosition().y >= 1000.0f){
-      _player.setPosition(_player.getPosition().x, 0.0f);
-    }
-    _window.setView(_port);
-    _window.clear(resetCol);
+    this->update();
+    this->draw();
     _window.draw(info);
-    _window.draw(_player);
     _window.display();
   }
-  return 1;//TODO
+  return 0;
 }
 
 void GameWorld::resize_viewport(void)
@@ -91,4 +87,27 @@ void GameWorld::resize_viewport(void)
     posX = (1 - sizeX) / 2.f;
   }
   _port.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
+}
+
+
+void GameWorld::update(void)
+{
+  _player.move(10.0f, 5.0f);
+  if(_player.getPosition().y >= 1000.0f){
+    _player.setPosition(_player.getPosition().x, 0.0f);
+  }
+  if(_player.getPosition().x >= 1000.0f){
+    _player.setPosition(0.0f, _player.getPosition().y);
+  }
+}
+
+void GameWorld::draw(void)
+{
+  sf::Color resetCol{51, 77, 77, 255};
+  _window.setView(_port);
+  _window.clear(resetCol);
+  _window.draw(_background);
+  //_window.draw(info);
+  _window.draw(_player);
+  //_window.display();
 }

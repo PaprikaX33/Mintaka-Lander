@@ -11,6 +11,7 @@ private:
   sf::View _port;
   sf::Clock _clock;
   sf::RectangleShape _player;
+  sf::RectangleShape _background;
 private:
   GameWorld(GameWorld const &) = delete;
   GameWorld(GameWorld &&) = delete;
@@ -18,6 +19,8 @@ private:
   GameWorld & operator=(GameWorld &&) = delete;
 
   void resize_viewport(void);
+  void update(void);
+  void draw(void);
 public:
   GameWorld();
   int run();
