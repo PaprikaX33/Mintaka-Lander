@@ -25,6 +25,7 @@ GameWorld::GameWorld():
 int GameWorld::run()
 {
   sf::Text info;
+  sf::Text debug;
   sf::Font font;
   if(!font.loadFromFile("./font/TheFont.ttf")){
     std::cerr << "Unable to open font\n";
@@ -34,12 +35,22 @@ int GameWorld::run()
   info.setCharacterSize(30);
   info.setFillColor(sf::Color::Green);
   info.setPosition(10,10);
+  debug.setFont(font);
+  debug.setCharacterSize(30);
+  debug.setFillColor(sf::Color::Green);
+  debug.setPosition(_port.getSize().x - 250.0f, 10.0f);
   _clock.restart();
   while(_window.isOpen()){
     std::stringstream stream;
     stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
     _clock.restart();
     info.setString(stream.str());
+    std::stringstream dbg;
+    auto const loc = _player.getPosition();
+    dbg << "X:\t" << loc.x << '\n';
+    dbg << "Y:\t" << loc.y << '\n';
+    dbg << "Ort:\t" << _player.getRotation() << '\n';
+    debug.setString(dbg.str());
     sf::Event winEvent;
     while(_window.pollEvent(winEvent)){
       switch(winEvent.type){
@@ -69,6 +80,7 @@ int GameWorld::run()
     this->update();
     this->draw();
     _window.draw(info);
+    _window.draw(debug);
     _window.display();
   }
   return 0;
