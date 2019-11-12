@@ -130,9 +130,6 @@ void GameWorld::update(void)
     _velocity += boost;
   }
   _player.move(_velocity);
-  // if(_player.getPosition().x >= 1000.0f){
-  //   _player.setPosition(0.0f, _player.getPosition().y);
-  // }
 }
 
 void GameWorld::draw(void)
