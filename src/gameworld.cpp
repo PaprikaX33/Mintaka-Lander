@@ -14,7 +14,9 @@ GameWorld::GameWorld():
 {
   _window.setFramerateLimit(60);
   _player.setPosition(sf::Vector2f{100.0f,100.0f});
-  _player.setFillColor(sf::Color::Red);
+  _player.setOutlineColor(sf::Color::Green);
+  _player.setFillColor(sf::Color::Transparent);
+  _player.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   this->resize_viewport();
@@ -30,7 +32,7 @@ int GameWorld::run()
   }
   info.setFont(font);
   info.setCharacterSize(30);
-  info.setFillColor(sf::Color::Red);
+  info.setFillColor(sf::Color::Green);
   info.setPosition(10,10);
   _clock.restart();
   while(_window.isOpen()){
@@ -52,6 +54,9 @@ int GameWorld::run()
         case sf::Keyboard::Q:
         case sf::Keyboard::Escape:
           _window.close();
+          break;
+        case sf::Keyboard::Space:
+          _player.move(0.0f, -50.0f);
           break;
         default:
           break;
@@ -92,13 +97,13 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-  _player.move(10.0f, 5.0f);
+  _player.move(0.0f, 5.0f);
   if(_player.getPosition().y >= 1000.0f){
     _player.setPosition(_player.getPosition().x, 0.0f);
   }
-  if(_player.getPosition().x >= 1000.0f){
-    _player.setPosition(0.0f, _player.getPosition().y);
-  }
+  // if(_player.getPosition().x >= 1000.0f){
+  //   _player.setPosition(0.0f, _player.getPosition().y);
+  // }
 }
 
 void GameWorld::draw(void)
