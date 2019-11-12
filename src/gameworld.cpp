@@ -90,18 +90,18 @@ void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
   float const viewRatio = static_cast<float>(_port.getSize().x) / static_cast<float>(_port.getSize().y);
-  float sizeX = 1;
-  float sizeY = 1;
+  float sizeX = 1.0f;
+  float sizeY = 1.0f;
   float posX = 0;
   float posY = 0;
 
   if(windowRatio < viewRatio){
     sizeY = windowRatio / viewRatio;
-    posY = (1 - sizeY) / 2.f;
+    posY = (1.0f - sizeY) / 2.f;
   }
   else {
     sizeX = viewRatio / windowRatio;
-    posX = (1 - sizeX) / 2.f;
+    posX = (1.0f - sizeX) / 2.f;
   }
   _port.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
 }
