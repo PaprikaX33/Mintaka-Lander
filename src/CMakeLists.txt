@@ -1,7 +1,9 @@
 set(MAIN_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/gameworld.cpp
   CACHE PATH "Main source files")
-#add_subdirectory(include)
+
+add_subdirectory(include)
 
 add_executable(${EXECUTABLE_NAME}
   ${MAIN_SOURCE_FILES}
