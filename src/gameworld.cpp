@@ -113,6 +113,15 @@ void GameWorld::update(void)
   if(_player.getPosition().y >= 1000.0f){
     _player.setPosition(_player.getPosition().x, 0.0f);
   }
+  bool const apr = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ^ apr){
+    if(apr){
+      _player.rotate(-5.0f);
+    }
+    else {
+      _player.rotate(5.0f);
+    }
+  }
   // if(_player.getPosition().x >= 1000.0f){
   //   _player.setPosition(0.0f, _player.getPosition().y);
   // }
