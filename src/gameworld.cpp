@@ -12,6 +12,7 @@ GameWorld::GameWorld():
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
+  _ground{sf::Vector2f{1000.0f, 50.0f}},
   _velocity{0.0f,0.0f}
 {
   _window.setFramerateLimit(60);
@@ -19,6 +20,11 @@ GameWorld::GameWorld():
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
   _player.setOutlineThickness(1.0f);
+  _player.setOrigin(_player.getSize().x * 0.5f, _player.getSize().y * 0.5f);
+  _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
+  _ground.setOutlineColor(sf::Color::Green);
+  _ground.setFillColor(sf::Color::Transparent);
+  _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   this->resize_viewport();
@@ -69,6 +75,11 @@ int GameWorld::run()
         case sf::Keyboard::Escape:
           _window.close();
           break;
+        case sf::Keyboard::R:
+          _player.setPosition(sf::Vector2f{100.0f,100.0f});
+          _player.setRotation(0.0f);
+          _velocity = sf::Vector2f{0.0f, 0.0f};
+          break;
         default:
           break;
         }
@@ -109,13 +120,12 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-
-  if(_player.getPosition().y >= 1000.0f){
-    _player.setPosition(_player.getPosition().x, 0.0f);
-  }
-  bool const apr = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ^ apr){
-    if(apr){
+  bool const rotateLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
+  bool const rotateRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
+    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
+  if(rotateLeft ^ rotateRight){
+    if(rotateLeft){
       _player.rotate(-5.0f);
     }
     else {
@@ -130,6 +140,10 @@ void GameWorld::update(void)
     _velocity += boost;
   }
   _player.move(_velocity);
+  if(_player.getPosition().y >= (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f)){
+    _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
+    _velocity.y = 0.0f;
+  }
 }
 
 void GameWorld::draw(void)
@@ -138,7 +152,9 @@ void GameWorld::draw(void)
   _window.setView(_port);
   _window.clear(resetCol);
   _window.draw(_background);
+
   //_window.draw(info);
   _window.draw(_player);
+  _window.draw(_ground);
   //_window.display();
 }

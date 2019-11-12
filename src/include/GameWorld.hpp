@@ -12,6 +12,7 @@ private:
   sf::Clock _clock;
   sf::RectangleShape _player;
   sf::RectangleShape _background;
+  sf::RectangleShape _ground;
   sf::Vector2f _velocity;
 private:
   GameWorld(GameWorld const &) = delete;
