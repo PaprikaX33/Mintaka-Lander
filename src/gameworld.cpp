@@ -120,9 +120,12 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-  bool const apr = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ^ apr){
-    if(apr){
+  bool const rotateLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
+  bool const rotateRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
+    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
+  if(rotateLeft ^ rotateRight){
+    if(rotateLeft){
       _player.rotate(-5.0f);
     }
     else {
