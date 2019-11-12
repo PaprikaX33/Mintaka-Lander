@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -66,9 +67,6 @@ int GameWorld::run()
         case sf::Keyboard::Escape:
           _window.close();
           break;
-        case sf::Keyboard::Space:
-          _player.move(0.0f, -50.0f);
-          break;
         default:
           break;
         }
@@ -121,6 +119,11 @@ void GameWorld::update(void)
     else {
       _player.rotate(5.0f);
     }
+  }
+  float const angle = _player.getRotation();
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
+    _player.move(15.0f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
+                 (-1.0f) * 15.0f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f));
   }
   // if(_player.getPosition().x >= 1000.0f){
   //   _player.setPosition(0.0f, _player.getPosition().y);
