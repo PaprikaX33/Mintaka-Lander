@@ -75,6 +75,11 @@ int GameWorld::run()
         case sf::Keyboard::Escape:
           _window.close();
           break;
+        case sf::Keyboard::R:
+          _player.setPosition(sf::Vector2f{100.0f,100.0f});
+          _player.setRotation(0.0f);
+          _velocity = sf::Vector2f{0.0f, 0.0f};
+          break;
         default:
           break;
         }
@@ -115,11 +120,6 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-
-  // if(_player.getPosition().y >= 1000.0f){
-  //   _player.setPosition(_player.getPosition().x, 0.0f);
-  // }
-  // 1000.0f - _ground.getSize().y
   bool const apr = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ^ apr){
     if(apr){
