@@ -17,6 +17,7 @@ private:
   GameWorld & operator=(GameWorld const &) = delete;
   GameWorld & operator=(GameWorld &&) = delete;
 
+  void resize_viewport(void);
 public:
   GameWorld();
   int run();
