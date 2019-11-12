@@ -7,6 +7,11 @@
 class GameWorld
 {
 private:
+  enum class GameState {
+                        RUNNING,
+                        LOSE,
+                        WIN
+  };
   sf::RenderWindow _window;
   sf::View _port;
   sf::Clock _clock;
@@ -14,6 +19,7 @@ private:
   sf::RectangleShape _background;
   sf::RectangleShape _ground;
   sf::Vector2f _velocity;
+  GameState _state;
 private:
   GameWorld(GameWorld const &) = delete;
   GameWorld(GameWorld &&) = delete;

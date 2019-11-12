@@ -13,7 +13,8 @@ GameWorld::GameWorld():
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
-  _velocity{0.0f,0.0f}
+  _velocity{0.0f,0.0f},
+  _state{GameState::RUNNING}
 {
   _window.setFramerateLimit(60);
   _player.setPosition(sf::Vector2f{100.0f,100.0f});
