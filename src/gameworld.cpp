@@ -11,7 +11,8 @@ GameWorld::GameWorld():
   _port{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
-  _background{sf::Vector2f{1000.0f, 1000.0f}}
+  _background{sf::Vector2f{1000.0f, 1000.0f}},
+  _velocity{0.0f,0.0f}
 {
   _window.setFramerateLimit(60);
   _player.setPosition(sf::Vector2f{100.0f,100.0f});
@@ -39,7 +40,7 @@ int GameWorld::run()
   debug.setFont(font);
   debug.setCharacterSize(30);
   debug.setFillColor(sf::Color::Green);
-  debug.setPosition(_port.getSize().x - 250.0f, 10.0f);
+  debug.setPosition(_port.getSize().x - 350.0f, 10.0f);
   _clock.restart();
   while(_window.isOpen()){
     std::stringstream stream;
@@ -48,8 +49,9 @@ int GameWorld::run()
     info.setString(stream.str());
     std::stringstream dbg;
     auto const loc = _player.getPosition();
-    dbg << "X:\t" << loc.x << '\n';
-    dbg << "Y:\t" << loc.y << '\n';
+    dbg.precision(3);
+    dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
+    dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
     dbg << "Ort:\t" << _player.getRotation() << '\n';
     debug.setString(dbg.str());
     sf::Event winEvent;
@@ -107,7 +109,7 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-  _player.move(0.0f, 5.0f);
+
   if(_player.getPosition().y >= 1000.0f){
     _player.setPosition(_player.getPosition().x, 0.0f);
   }
@@ -120,11 +122,14 @@ void GameWorld::update(void)
       _player.rotate(5.0f);
     }
   }
+  _velocity += sf::Vector2f{0.0f, 0.05f};
   float const angle = _player.getRotation();
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
-    _player.move(15.0f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
-                 (-1.0f) * 15.0f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f));
+    sf::Vector2f boost{0.15f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
+                       (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
+    _velocity += boost;
   }
+  _player.move(_velocity);
   // if(_player.getPosition().x >= 1000.0f){
   //   _player.setPosition(0.0f, _player.getPosition().y);
   // }
