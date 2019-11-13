@@ -4,6 +4,7 @@ set(MAIN_SOURCE_FILES
   CACHE PATH "Main source files")
 
 add_subdirectory(include)
+add_subdirectory(exception)
 
 add_executable(${EXECUTABLE_NAME}
   ${MAIN_SOURCE_FILES}
@@ -12,7 +13,9 @@ add_executable(${EXECUTABLE_NAME}
 
 target_include_directories(${EXECUTABLE_NAME}
   PRIVATE
-  include)
+  include
+  exception)
+
 target_link_libraries(${EXECUTABLE_NAME}
   PRIVATE
   sfml-graphics
