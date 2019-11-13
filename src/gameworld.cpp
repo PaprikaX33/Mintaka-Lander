@@ -14,10 +14,12 @@ GameWorld::GameWorld():
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
+  _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
   _velocity{0.0f,0.0f},
   _textFont{},
   _fpsCounter{},
   _debugText{},
+  _pauseText{},
   _state{GameState::RUNNING}
 {
   char const * const fontDir = "./font/TheFont.ttf";
@@ -36,6 +38,9 @@ GameWorld::GameWorld():
   _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
+
+  _pauseOverlay.setPosition(sf::Vector2f{0.0f,0.0f});
+  _pauseOverlay.setFillColor(sf::Color{0, 0, 0, 150});
   this->resize_viewport();
 
   _fpsCounter.setFont(_textFont);
@@ -46,6 +51,16 @@ GameWorld::GameWorld():
   _debugText.setCharacterSize(30);
   _debugText.setFillColor(sf::Color::Green);
   _debugText.setPosition(_port.getSize().x - 350.0f, 10.0f);
+
+  _pauseText.setFont(_textFont);
+  _pauseText.setCharacterSize(70);
+  _pauseText.setString("--PAUSED--");
+  _pauseText.setFillColor(sf::Color::Green);
+  //center text
+  sf::FloatRect pauseRect = _pauseText.getLocalBounds();
+  _pauseText.setOrigin(pauseRect.left + pauseRect.width/2.0f,
+                       pauseRect.top  + pauseRect.height/2.0f);
+  _pauseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
 }
 
 int GameWorld::run()
@@ -177,5 +192,9 @@ void GameWorld::draw(void)
   _window.draw(_ground);
   _window.draw(_fpsCounter);
   _window.draw(_debugText);
+  if(_state == GameState::PAUSED){
+    _window.draw(_pauseOverlay);
+    _window.draw(_pauseText);
+  }
   _window.display();
 }
