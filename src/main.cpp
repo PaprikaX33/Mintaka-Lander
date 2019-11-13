@@ -12,9 +12,9 @@ int main(int argc, char ** argv)
     std::cout << argv[i] << ' ';
   }
   std::cout << '\n';
-  GameWorld game;
   int retcode = -1;
   try{
+    GameWorld game;
     retcode = game.run();
   }
   catch(std::exception &e){

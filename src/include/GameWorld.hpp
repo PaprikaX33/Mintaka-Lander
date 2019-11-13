@@ -19,6 +19,9 @@ private:
   sf::RectangleShape _background;
   sf::RectangleShape _ground;
   sf::Vector2f _velocity;
+  sf::Font _textFont;
+  sf::Text _fpsCounter;
+  sf::Text _debugText;
   GameState _state;
 private:
   GameWorld(GameWorld const &) = delete;

@@ -14,6 +14,9 @@ GameWorld::GameWorld():
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
   _velocity{0.0f,0.0f},
+  _textFont{},
+  _fpsCounter{},
+  _debugText{},
   _state{GameState::RUNNING}
 {
   _window.setFramerateLimit(60);
@@ -33,8 +36,6 @@ GameWorld::GameWorld():
 
 int GameWorld::run()
 {
-  sf::Text info;
-  sf::Text debug;
   sf::Font font;
   if(!font.loadFromFile("./font/TheFont.ttf")){
     std::cerr << "Unable to open font\n";
@@ -55,7 +56,7 @@ int GameWorld::run()
     _clock.restart();
     info.setString(stream.str());
     std::stringstream dbg;
-    auto const loc = _player.getPosition();
+    auto const & loc = _player.getPosition();
     dbg.precision(3);
     dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
     dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
