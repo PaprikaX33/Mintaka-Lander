@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
+#include "FontDirectory.hpp"
 
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
@@ -19,6 +20,10 @@ GameWorld::GameWorld():
   _debugText{},
   _state{GameState::RUNNING}
 {
+  char const * const fontDir = "./font/TheFont.ttf";
+  if(!_textFont.loadFromFile(fontDir)){
+    throw Exc::FontDir{fontDir};
+  }
   _window.setFramerateLimit(60);
   _player.setPosition(sf::Vector2f{100.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
@@ -32,36 +37,32 @@ GameWorld::GameWorld():
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   this->resize_viewport();
+
+  _fpsCounter.setFont(_textFont);
+  _fpsCounter.setCharacterSize(30);
+  _fpsCounter.setFillColor(sf::Color::Green);
+  _fpsCounter.setPosition(10,10);
+  _debugText.setFont(_textFont);
+  _debugText.setCharacterSize(30);
+  _debugText.setFillColor(sf::Color::Green);
+  _debugText.setPosition(_port.getSize().x - 350.0f, 10.0f);
 }
 
 int GameWorld::run()
 {
-  sf::Font font;
-  if(!font.loadFromFile("./font/TheFont.ttf")){
-    std::cerr << "Unable to open font\n";
-    return -1;
-  }
-  info.setFont(font);
-  info.setCharacterSize(30);
-  info.setFillColor(sf::Color::Green);
-  info.setPosition(10,10);
-  debug.setFont(font);
-  debug.setCharacterSize(30);
-  debug.setFillColor(sf::Color::Green);
-  debug.setPosition(_port.getSize().x - 350.0f, 10.0f);
   _clock.restart();
   while(_window.isOpen()){
     std::stringstream stream;
     stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
     _clock.restart();
-    info.setString(stream.str());
+    _fpsCounter.setString(stream.str());
     std::stringstream dbg;
     auto const & loc = _player.getPosition();
     dbg.precision(3);
     dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
     dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
     dbg << "Ort:\t" << _player.getRotation() << '\n';
-    debug.setString(dbg.str());
+    _debugText.setString(dbg.str());
     sf::Event winEvent;
     while(_window.pollEvent(winEvent)){
       switch(winEvent.type){
@@ -92,9 +93,6 @@ int GameWorld::run()
     }
     this->update();
     this->draw();
-    _window.draw(info);
-    _window.draw(debug);
-    _window.display();
   }
   return 0;
 }
@@ -154,9 +152,9 @@ void GameWorld::draw(void)
   _window.setView(_port);
   _window.clear(resetCol);
   _window.draw(_background);
-
-  //_window.draw(info);
   _window.draw(_player);
   _window.draw(_ground);
-  //_window.display();
+  _window.draw(_fpsCounter);
+  _window.draw(_debugText);
+  _window.display();
 }
