@@ -25,6 +25,8 @@ private:
   sf::Text _fpsCounter;
   sf::Text _debugText;
   sf::Text _pauseText;
+  sf::Text _winText;
+  sf::Text _loseText;
   GameState _state;
 private:
   GameWorld(GameWorld const &) = delete;

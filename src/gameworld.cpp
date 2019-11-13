@@ -20,6 +20,8 @@ GameWorld::GameWorld():
   _fpsCounter{},
   _debugText{},
   _pauseText{},
+  _winText{},
+  _loseText{},
   _state{GameState::RUNNING}
 {
   char const * const fontDir = "./font/TheFont.ttf";
@@ -56,11 +58,30 @@ GameWorld::GameWorld():
   _pauseText.setCharacterSize(70);
   _pauseText.setString("--PAUSED--");
   _pauseText.setFillColor(sf::Color::Green);
+
+  _winText.setFont(_textFont);
+  _winText.setCharacterSize(70);
+  _winText.setString("--YOU WIN--");
+  _winText.setFillColor(sf::Color::Green);
+  _loseText.setFont(_textFont);
+  _loseText.setCharacterSize(70);
+  _loseText.setString("--YOU LOSE--");
+  _loseText.setFillColor(sf::Color::Green);
   //center text
-  sf::FloatRect pauseRect = _pauseText.getLocalBounds();
+  sf::FloatRect const pauseRect = _pauseText.getLocalBounds();
   _pauseText.setOrigin(pauseRect.left + pauseRect.width/2.0f,
                        pauseRect.top  + pauseRect.height/2.0f);
   _pauseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+
+  sf::FloatRect const winRect = _winText.getLocalBounds();
+  _winText.setOrigin(winRect.left + winRect.width/2.0f,
+                       winRect.top  + winRect.height/2.0f);
+  _winText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+
+  sf::FloatRect const loseRect = _loseText.getLocalBounds();
+  _loseText.setOrigin(loseRect.left + loseRect.width/2.0f,
+                     loseRect.top  + loseRect.height/2.0f);
+  _loseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
 }
 
 int GameWorld::run()
@@ -91,6 +112,15 @@ void GameWorld::key_handle(void)
       case sf::Keyboard::Escape:
         _window.close();
         break;
+
+        //TODO REMOVE THIS DEBUG KEY
+      case sf::Keyboard::W:
+        _state = GameState::WIN;
+        break;
+      case sf::Keyboard::L:
+        _state = GameState::LOSE;
+        break;
+
       case sf::Keyboard::P:
         switch(_state){
         case  GameState::PAUSED:
@@ -192,9 +222,21 @@ void GameWorld::draw(void)
   _window.draw(_ground);
   _window.draw(_fpsCounter);
   _window.draw(_debugText);
-  if(_state == GameState::PAUSED){
+  switch(_state){
+  case GameState::LOSE:
+    _window.draw(_pauseOverlay);
+    _window.draw(_loseText);
+    break;
+  case GameState::WIN:
+    _window.draw(_pauseOverlay);
+    _window.draw(_winText);
+    break;
+  case GameState::PAUSED:
     _window.draw(_pauseOverlay);
     _window.draw(_pauseText);
+    break;
+  default:
+    break;
   }
   _window.display();
 }
