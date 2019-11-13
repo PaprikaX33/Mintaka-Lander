@@ -29,7 +29,7 @@ GameWorld::GameWorld():
     throw Exc::FontDir{fontDir};
   }
   _window.setFramerateLimit(60);
-  _player.setPosition(sf::Vector2f{100.0f,100.0f});
+  _player.setPosition(sf::Vector2f{500.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
   _player.setOutlineThickness(1.0f);
@@ -134,7 +134,7 @@ void GameWorld::key_handle(void)
         }
         break;
       case sf::Keyboard::R:
-        _player.setPosition(sf::Vector2f{100.0f,100.0f});
+        _player.setPosition(sf::Vector2f{500.0f,100.0f});
         _player.setRotation(0.0f);
         _velocity = sf::Vector2f{0.0f, 0.0f};
         _state = GameState::RUNNING;
