@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "GameWorld.hpp"
+#include "BaseException.hpp"
 
 int main(int argc, char ** argv)
 {
@@ -16,6 +17,9 @@ int main(int argc, char ** argv)
   try{
     GameWorld game;
     retcode = game.run();
+  }
+  catch(Exc::Base &e){
+    std::cerr << "Exception: " << e.excID() << " : "<< e.what() << '\n';
   }
   catch(std::exception &e){
     std::cerr << "Exception: " << e.what() << '\n';
