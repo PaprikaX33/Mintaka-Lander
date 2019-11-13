@@ -52,17 +52,6 @@ int GameWorld::run()
 {
   _clock.restart();
   while(_window.isOpen()){
-    std::stringstream stream;
-    stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
-    _clock.restart();
-    _fpsCounter.setString(stream.str());
-    std::stringstream dbg;
-    auto const & loc = _player.getPosition();
-    dbg.precision(3);
-    dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
-    dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
-    dbg << "Ort:\t" << _player.getRotation() << '\n';
-    _debugText.setString(dbg.str());
     sf::Event winEvent;
     while(_window.pollEvent(winEvent)){
       switch(winEvent.type){
@@ -82,6 +71,7 @@ int GameWorld::run()
           _player.setPosition(sf::Vector2f{100.0f,100.0f});
           _player.setRotation(0.0f);
           _velocity = sf::Vector2f{0.0f, 0.0f};
+          _state = GameState::RUNNING;
           break;
         default:
           break;
@@ -144,6 +134,18 @@ void GameWorld::update(void)
     _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
     _velocity.y = 0.0f;
   }
+
+  std::stringstream stream;
+  stream << "FPS:\t" << std::round(1.0f / _clock.getElapsedTime().asSeconds()) <<'\n';
+  _clock.restart();
+  _fpsCounter.setString(stream.str());
+  std::stringstream dbg;
+  auto const & loc = _player.getPosition();
+  dbg.precision(3);
+  dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
+  dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
+  dbg << "Ort:\t" << _player.getRotation() << '\n';
+  _debugText.setString(dbg.str());
 }
 
 void GameWorld::draw(void)
