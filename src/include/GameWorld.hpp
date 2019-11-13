@@ -10,7 +10,8 @@ private:
   enum class GameState {
                         RUNNING,
                         LOSE,
-                        WIN
+                        WIN,
+                        PAUSED
   };
   sf::RenderWindow _window;
   sf::View _port;
@@ -32,6 +33,8 @@ private:
   void resize_viewport(void);
   void update(void);
   void draw(void);
+
+  void key_handle(void);
 public:
   GameWorld();
   int run();

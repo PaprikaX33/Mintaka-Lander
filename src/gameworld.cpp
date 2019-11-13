@@ -52,39 +52,56 @@ int GameWorld::run()
 {
   _clock.restart();
   while(_window.isOpen()){
-    sf::Event winEvent;
-    while(_window.pollEvent(winEvent)){
-      switch(winEvent.type){
-      case sf::Event::Closed:
-        _window.close();
-        break;
-      case sf::Event::Resized:
-        this->resize_viewport();
-        break;
-      case sf::Event::KeyReleased:{
-        switch(winEvent.key.code){
-        case sf::Keyboard::Q:
-        case sf::Keyboard::Escape:
-          _window.close();
-          break;
-        case sf::Keyboard::R:
-          _player.setPosition(sf::Vector2f{100.0f,100.0f});
-          _player.setRotation(0.0f);
-          _velocity = sf::Vector2f{0.0f, 0.0f};
-          _state = GameState::RUNNING;
-          break;
-        default:
-          break;
-        }
-      }break;
-      default:
-        break;
-      }
-    }
+    this->key_handle();
     this->update();
     this->draw();
   }
   return 0;
+}
+
+void GameWorld::key_handle(void)
+{
+  sf::Event winEvent;
+  while(_window.pollEvent(winEvent)){
+    switch(winEvent.type){
+    case sf::Event::Closed:
+      _window.close();
+      break;
+    case sf::Event::Resized:
+      this->resize_viewport();
+      break;
+    case sf::Event::KeyReleased:{
+      switch(winEvent.key.code){
+      case sf::Keyboard::Q:
+      case sf::Keyboard::Escape:
+        _window.close();
+        break;
+      case sf::Keyboard::P:
+        switch(_state){
+        case  GameState::PAUSED:
+          _state = GameState::RUNNING;
+          break;
+        case GameState::RUNNING:
+          _state = GameState::PAUSED;
+          break;
+        default:
+            break;
+        }
+        break;
+      case sf::Keyboard::R:
+        _player.setPosition(sf::Vector2f{100.0f,100.0f});
+        _player.setRotation(0.0f);
+        _velocity = sf::Vector2f{0.0f, 0.0f};
+        _state = GameState::RUNNING;
+        break;
+      default:
+        break;
+      }
+    }break;
+    default:
+      break;
+    }
+  }
 }
 
 void GameWorld::resize_viewport(void)
@@ -110,29 +127,31 @@ void GameWorld::resize_viewport(void)
 
 void GameWorld::update(void)
 {
-  bool const rotateLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
-    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
-  bool const rotateRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
-    sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
-  if(rotateLeft ^ rotateRight){
-    if(rotateLeft){
-      _player.rotate(-5.0f);
+  if(_state == GameState::RUNNING){
+    bool const rotateLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);
+    bool const rotateRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ||
+      sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right);
+    if(rotateLeft ^ rotateRight){
+      if(rotateLeft){
+        _player.rotate(-5.0f);
+      }
+      else {
+        _player.rotate(5.0f);
+      }
     }
-    else {
-      _player.rotate(5.0f);
+    _velocity += sf::Vector2f{0.0f, 0.05f};
+    float const angle = _player.getRotation();
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
+      sf::Vector2f boost{0.15f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
+                         (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
+      _velocity += boost;
     }
-  }
-  _velocity += sf::Vector2f{0.0f, 0.05f};
-  float const angle = _player.getRotation();
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
-    sf::Vector2f boost{0.15f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
-                       (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
-    _velocity += boost;
-  }
-  _player.move(_velocity);
-  if(_player.getPosition().y >= (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f)){
-    _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
-    _velocity.y = 0.0f;
+    _player.move(_velocity);
+    if(_player.getPosition().y >= (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f)){
+      _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
+      _velocity.y = 0.0f;
+    }
   }
 
   std::stringstream stream;
