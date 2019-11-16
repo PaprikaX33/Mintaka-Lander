@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
 #include "FontDirectory.hpp"
+#include "Icon.hpp"
 
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
@@ -30,6 +31,7 @@ GameWorld::GameWorld():
     throw Exc::FontDir{fontDir};
   }
   _window.setFramerateLimit(60);
+  _window.setIcon(icon::width(), icon::height(), icon::data());
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
