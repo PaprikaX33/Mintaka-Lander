@@ -9,7 +9,8 @@
 
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
-  _port{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
+  _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
+  _secondary{sf::FloatRect{0.0, 0.0f, 1000.0f, 1000.0f}},
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
@@ -52,7 +53,7 @@ GameWorld::GameWorld():
   _debugText.setFont(_textFont);
   _debugText.setCharacterSize(30);
   _debugText.setFillColor(sf::Color::Green);
-  _debugText.setPosition(_port.getSize().x - 350.0f, 10.0f);
+  _debugText.setPosition(_primary.getSize().x - 350.0f, 10.0f);
 
   _pauseText.setFont(_textFont);
   _pauseText.setCharacterSize(70);
@@ -152,7 +153,7 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  float const viewRatio = static_cast<float>(_port.getSize().x) / static_cast<float>(_port.getSize().y);
+  float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
   float sizeX = 1.0f;
   float sizeY = 1.0f;
   float posX = 0;
@@ -166,7 +167,8 @@ void GameWorld::resize_viewport(void)
     sizeX = viewRatio / windowRatio;
     posX = (1.0f - sizeX) / 2.f;
   }
-  _port.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
+  _primary.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
+  //_primary.setViewport(sf::FloatRect(0.0f, 0.0f, sizeX, sizeY));
 }
 
 
@@ -214,8 +216,8 @@ void GameWorld::update(void)
 
 void GameWorld::draw(void)
 {
-  sf::Color resetCol{51, 77, 77, 255};
-  _window.setView(_port);
+  sf::Color const resetCol{51, 77, 77, 255};
+  _window.setView(_primary);
   _window.clear(resetCol);
   _window.draw(_background);
   _window.draw(_player);

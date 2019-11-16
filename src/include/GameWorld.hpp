@@ -14,7 +14,8 @@ private:
                         PAUSED
   };
   sf::RenderWindow _window;
-  sf::View _port;
+  sf::View _primary;
+  sf::View _secondary;
   sf::Clock _clock;
   sf::RectangleShape _player;
   sf::RectangleShape _background;
