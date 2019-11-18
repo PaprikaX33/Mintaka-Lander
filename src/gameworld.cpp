@@ -167,15 +167,17 @@ void GameWorld::resize_viewport(void)
     //View is wider
     //Window is taller
     prim.height = windowRatio / viewRatio;
-    prim.top = (1.0f - prim.height) / 2.f;
+    prim.top = (1.0f - prim.height) / 2.0f;
     secn.height = windowRatio / viewRatio;
-    secn.top = (1.0f - secn.height) / 2.f;
+    secn.top = (1.0f - secn.height) / 2.0f;
   }
   else{
     //Window is wider
     //View is taller
     prim.width = (viewRatio / windowRatio) * (primRatio - secnRatio);
-    prim.left = (1.0f - prim.width) / 2.f;
+    prim.left  = (1.0f - (viewRatio / windowRatio)) / 2.0f;
+    secn.width = (viewRatio / windowRatio) * secnRatio;
+    secn.left  = prim.width + prim.left;
   }
   //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
   _primary.setViewport(prim);
