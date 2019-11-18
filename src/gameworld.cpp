@@ -9,7 +9,7 @@
 #include "Icon.hpp"
 
 GameWorld::GameWorld():
-  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
+  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, 1000.0f, 1000.0f}},
   _clock{},
@@ -155,20 +155,31 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
-  //float constexpr viewRatio = 800.0f / 600.0f;
-  sf::FloatRect prim{0.0f, 0.0f, 1.0f, 1.0f};
+  //float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
+  float constexpr viewRatio = 800.0f / 600.0f;
+  float constexpr primRatio = 1.0f;
+  float constexpr secnRatio = 200.0f / 600.0f;
+
+  sf::FloatRect prim{0.0f, 0.0f, primRatio - secnRatio, 1.0f};
+  sf::FloatRect secn{primRatio - secnRatio, 0.0f, secnRatio, 1.0f};
 
   if(windowRatio < viewRatio){
+    //View is wider
+    //Window is taller
     prim.height = windowRatio / viewRatio;
     prim.top = (1.0f - prim.height) / 2.f;
+    secn.height = windowRatio / viewRatio;
+    secn.top = (1.0f - secn.height) / 2.f;
   }
-  else {
-    prim.width = viewRatio / windowRatio;
+  else{
+    //Window is wider
+    //View is taller
+    prim.width = (viewRatio / windowRatio) * (primRatio - secnRatio);
     prim.left = (1.0f - prim.width) / 2.f;
   }
   //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
   _primary.setViewport(prim);
+  _secondary.setViewport(secn);
 }
 
 
@@ -217,8 +228,12 @@ void GameWorld::update(void)
 void GameWorld::draw(void)
 {
   sf::Color const resetCol{51, 77, 77, 255};
-  _window.setView(_primary);
   _window.clear(resetCol);
+  _window.setView(_secondary);
+  _background.setFillColor(sf::Color::Red);
+  _window.draw(_background);
+  _window.setView(_primary);
+  _background.setFillColor(sf::Color::Black);
   _window.draw(_background);
   _window.draw(_player);
   _window.draw(_ground);
