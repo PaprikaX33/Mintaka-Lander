@@ -156,21 +156,19 @@ void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
   float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
-  float sizeX = 1.0f;
-  float sizeY = 1.0f;
-  float posX = 0;
-  float posY = 0;
+  //float constexpr viewRatio = 800.0f / 600.0f;
+  sf::FloatRect prim{0.0f, 0.0f, 1.0f, 1.0f};
 
   if(windowRatio < viewRatio){
-    sizeY = windowRatio / viewRatio;
-    posY = (1.0f - sizeY) / 2.f;
+    prim.height = windowRatio / viewRatio;
+    prim.top = (1.0f - prim.height) / 2.f;
   }
   else {
-    sizeX = viewRatio / windowRatio;
-    posX = (1.0f - sizeX) / 2.f;
+    prim.width = viewRatio / windowRatio;
+    prim.left = (1.0f - prim.width) / 2.f;
   }
-  _primary.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
-  //_primary.setViewport(sf::FloatRect(0.0f, 0.0f, sizeX, sizeY));
+  //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
+  _primary.setViewport(prim);
 }
 
 
