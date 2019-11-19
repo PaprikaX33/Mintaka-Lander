@@ -11,7 +11,7 @@
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
-  _secondary{sf::FloatRect{0.0, 0.0f, 200.0f * (1000.0f / 800.0f), 1000.0f}},
+  _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
@@ -53,12 +53,15 @@ GameWorld::GameWorld():
 
   _fpsCounter.setFont(_textFont);
   _fpsCounter.setCharacterSize(30);
-  _fpsCounter.setFillColor(sf::Color::Green);
+  _fpsCounter.setFillColor(sf::Color::Black);
+  _fpsCounter.setString("--UNINITIALIZED--");
   _fpsCounter.setPosition(10,10);
   _debugText.setFont(_textFont);
   _debugText.setCharacterSize(30);
-  _debugText.setFillColor(sf::Color::Green);
-  _debugText.setPosition(_primary.getSize().x - 350.0f, 10.0f);
+  _debugText.setString("--UNINITIALIZED--");
+  _debugText.setFillColor(sf::Color::Black);
+  sf::FloatRect const fpsRect = _fpsCounter.getGlobalBounds();
+  _debugText.setPosition(fpsRect.left, fpsRect.top + fpsRect.height + 5.0f);
 
   _pauseText.setFont(_textFont);
   _pauseText.setCharacterSize(70);
@@ -236,13 +239,13 @@ void GameWorld::draw(void)
   _window.clear(resetCol);
   _window.setView(_secondary);
   _window.draw(_secondBackground);
+  _window.draw(_fpsCounter);
+  _window.draw(_debugText);
   _window.setView(_primary);
   _background.setFillColor(sf::Color::Black);
   _window.draw(_background);
   _window.draw(_player);
   _window.draw(_ground);
-  _window.draw(_fpsCounter);
-  _window.draw(_debugText);
   switch(_state){
   case GameState::LOSE:
     _window.draw(_pauseOverlay);
