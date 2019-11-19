@@ -11,10 +11,11 @@
 GameWorld::GameWorld():
   _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
-  _secondary{sf::FloatRect{0.0, 0.0f, 1000.0f, 1000.0f}},
+  _secondary{sf::FloatRect{0.0, 0.0f, 200.0f * (1000.0f / 800.0f), 1000.0f}},
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
+  _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
   _velocity{0.0f,0.0f},
@@ -43,6 +44,8 @@ GameWorld::GameWorld():
   _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
+  _secondBackground.setPosition(sf::Vector2f{0.0f,0.0f});
+  _secondBackground.setFillColor(sf::Color::Green);
 
   _pauseOverlay.setPosition(sf::Vector2f{0.0f,0.0f});
   _pauseOverlay.setFillColor(sf::Color{0, 0, 0, 150});
@@ -232,8 +235,7 @@ void GameWorld::draw(void)
   sf::Color const resetCol{51, 77, 77, 255};
   _window.clear(resetCol);
   _window.setView(_secondary);
-  _background.setFillColor(sf::Color::Red);
-  _window.draw(_background);
+  _window.draw(_secondBackground);
   _window.setView(_primary);
   _background.setFillColor(sf::Color::Black);
   _window.draw(_background);

@@ -19,6 +19,7 @@ private:
   sf::Clock _clock;
   sf::RectangleShape _player;
   sf::RectangleShape _background;
+  sf::RectangleShape _secondBackground;
   sf::RectangleShape _ground;
   sf::RectangleShape _pauseOverlay;
   sf::Vector2f _velocity;
