@@ -6,13 +6,16 @@
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
 #include "FontDirectory.hpp"
+#include "Icon.hpp"
 
 GameWorld::GameWorld():
-  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close},
-  _port{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
+  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
+  _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
+  _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
   _player{sf::Vector2f{10.0f, 10.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
+  _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
   _velocity{0.0f,0.0f},
@@ -29,6 +32,7 @@ GameWorld::GameWorld():
     throw Exc::FontDir{fontDir};
   }
   _window.setFramerateLimit(60);
+  _window.setIcon(icon::width(), icon::height(), icon::data());
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
@@ -40,6 +44,8 @@ GameWorld::GameWorld():
   _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
+  _secondBackground.setPosition(sf::Vector2f{0.0f,0.0f});
+  _secondBackground.setFillColor(sf::Color::Green);
 
   _pauseOverlay.setPosition(sf::Vector2f{0.0f,0.0f});
   _pauseOverlay.setFillColor(sf::Color{0, 0, 0, 150});
@@ -47,12 +53,15 @@ GameWorld::GameWorld():
 
   _fpsCounter.setFont(_textFont);
   _fpsCounter.setCharacterSize(30);
-  _fpsCounter.setFillColor(sf::Color::Green);
+  _fpsCounter.setFillColor(sf::Color::Black);
+  _fpsCounter.setString("--UNINITIALIZED--");
   _fpsCounter.setPosition(10,10);
   _debugText.setFont(_textFont);
   _debugText.setCharacterSize(30);
-  _debugText.setFillColor(sf::Color::Green);
-  _debugText.setPosition(_port.getSize().x - 350.0f, 10.0f);
+  _debugText.setString("--UNINITIALIZED--");
+  _debugText.setFillColor(sf::Color::Black);
+  sf::FloatRect const fpsRect = _fpsCounter.getGlobalBounds();
+  _debugText.setPosition(fpsRect.left, fpsRect.top + fpsRect.height + 5.0f);
 
   _pauseText.setFont(_textFont);
   _pauseText.setCharacterSize(70);
@@ -152,21 +161,33 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  float const viewRatio = static_cast<float>(_port.getSize().x) / static_cast<float>(_port.getSize().y);
-  float sizeX = 1.0f;
-  float sizeY = 1.0f;
-  float posX = 0;
-  float posY = 0;
+  //float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
+  float constexpr viewRatio = 800.0f / 600.0f;
+  float constexpr primRatio = 1.0f;
+  float constexpr secnRatio = 200.0f / 600.0f;
+
+  sf::FloatRect prim{0.0f, 0.0f, primRatio - secnRatio, 1.0f};
+  sf::FloatRect secn{primRatio - secnRatio, 0.0f, secnRatio, 1.0f};
 
   if(windowRatio < viewRatio){
-    sizeY = windowRatio / viewRatio;
-    posY = (1.0f - sizeY) / 2.f;
+    //View is wider
+    //Window is taller
+    prim.height = windowRatio / viewRatio;
+    prim.top = (1.0f - prim.height) / 2.0f;
+    secn.height = windowRatio / viewRatio;
+    secn.top = (1.0f - secn.height) / 2.0f;
   }
-  else {
-    sizeX = viewRatio / windowRatio;
-    posX = (1.0f - sizeX) / 2.f;
+  else{
+    //Window is wider
+    //View is taller
+    prim.width = (viewRatio / windowRatio) * (primRatio - secnRatio);
+    prim.left  = (1.0f - (viewRatio / windowRatio)) / 2.0f;
+    secn.width = (viewRatio / windowRatio) * secnRatio;
+    secn.left  = prim.width + prim.left;
   }
-  _port.setViewport(sf::FloatRect(posX, posY, sizeX, sizeY));
+  //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
+  _primary.setViewport(prim);
+  _secondary.setViewport(secn);
 }
 
 
@@ -214,14 +235,17 @@ void GameWorld::update(void)
 
 void GameWorld::draw(void)
 {
-  sf::Color resetCol{51, 77, 77, 255};
-  _window.setView(_port);
+  sf::Color const resetCol{51, 77, 77, 255};
   _window.clear(resetCol);
+  _window.setView(_secondary);
+  _window.draw(_secondBackground);
+  _window.draw(_fpsCounter);
+  _window.draw(_debugText);
+  _window.setView(_primary);
+  _background.setFillColor(sf::Color::Black);
   _window.draw(_background);
   _window.draw(_player);
   _window.draw(_ground);
-  _window.draw(_fpsCounter);
-  _window.draw(_debugText);
   switch(_state){
   case GameState::LOSE:
     _window.draw(_pauseOverlay);
