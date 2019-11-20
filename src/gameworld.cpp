@@ -13,7 +13,7 @@ GameWorld::GameWorld():
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
-  _player{sf::Vector2f{10.0f, 10.0f}},
+  _player{sf::Vector2f{20.0f, 20.0f}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
@@ -36,7 +36,7 @@ GameWorld::GameWorld():
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
-  _player.setOutlineThickness(4.0f);
+  _player.setOutlineThickness(-4.0f);
   _player.setOrigin(_player.getSize().x * 0.5f, _player.getSize().y * 0.5f);
   _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
   _ground.setOutlineColor(sf::Color::Green);
@@ -202,8 +202,9 @@ void GameWorld::update(void)
       _velocity += boost;
     }
     _player.move(_velocity);
-    if(_player.getPosition().y >= (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f)){
-      _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
+    sf::FloatRect const playerRect = _player.getGlobalBounds();
+    if((playerRect.top + playerRect.height) >= _ground.getPosition().y){
+      _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.height * 0.5f));
       _velocity.y = 0.0f;
     }
   }
