@@ -36,7 +36,7 @@ GameWorld::GameWorld():
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
   _player.setOutlineColor(sf::Color::Green);
   _player.setFillColor(sf::Color::Transparent);
-  _player.setOutlineThickness(1.0f);
+  _player.setOutlineThickness(4.0f);
   _player.setOrigin(_player.getSize().x * 0.5f, _player.getSize().y * 0.5f);
   _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
   _ground.setOutlineColor(sf::Color::Green);
@@ -76,21 +76,9 @@ GameWorld::GameWorld():
   _loseText.setCharacterSize(70);
   _loseText.setString("--YOU LOSE--");
   _loseText.setFillColor(sf::Color::Green);
-  //center text
-  sf::FloatRect const pauseRect = _pauseText.getLocalBounds();
-  _pauseText.setOrigin(pauseRect.left + pauseRect.width/2.0f,
-                       pauseRect.top  + pauseRect.height/2.0f);
-  _pauseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
-
-  sf::FloatRect const winRect = _winText.getLocalBounds();
-  _winText.setOrigin(winRect.left + winRect.width/2.0f,
-                       winRect.top  + winRect.height/2.0f);
-  _winText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
-
-  sf::FloatRect const loseRect = _loseText.getLocalBounds();
-  _loseText.setOrigin(loseRect.left + loseRect.width/2.0f,
-                     loseRect.top  + loseRect.height/2.0f);
-  _loseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+  this->center_obj(_pauseText);
+  this->center_obj(_winText);
+  this->center_obj(_loseText);
 }
 
 int GameWorld::run()
@@ -139,7 +127,7 @@ void GameWorld::key_handle(void)
           _state = GameState::PAUSED;
           break;
         default:
-            break;
+          break;
         }
         break;
       case sf::Keyboard::R:
@@ -263,4 +251,26 @@ void GameWorld::draw(void)
     break;
   }
   _window.display();
+}
+
+template<typename T>
+void center_obj(T & inObj)
+{
+  sf::FloatRect const objRect = inObj.getLocalBounds();
+  inObj.setOrigin(objRect.left + objRect.width/2.0f,
+                  objRect.top  + objRect.height/2.0f);
+  inObj.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+}
+
+void GameWorld::center_obj(sf::Sprite & inObj)
+{
+  return ::center_obj(inObj);
+}
+void GameWorld::center_obj(sf::Text & inObj)
+{
+  return ::center_obj(inObj);
+}
+void GameWorld::center_obj(sf::Shape & inObj)
+{
+  return ::center_obj(inObj);
 }

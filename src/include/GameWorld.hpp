@@ -36,6 +36,9 @@ private:
   GameWorld & operator=(GameWorld const &) = delete;
   GameWorld & operator=(GameWorld &&) = delete;
 
+  void center_obj(sf::Sprite &);
+  void center_obj(sf::Text &);
+  void center_obj(sf::Shape &);
   void resize_viewport(void);
   void update(void);
   void draw(void);
