@@ -1,4 +1,5 @@
 set(MAIN_HEADER_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/GameWorld.hpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Player.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Icon.hpp
   CACHE PATH "Main header files")
