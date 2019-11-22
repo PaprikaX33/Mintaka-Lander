@@ -198,9 +198,14 @@ void GameWorld::update(void)
       _velocity += boost;
     }
     _player.move(_velocity);
-    sf::FloatRect const playerRect = _player.getGlobalBounds();
-    if((playerRect.top + playerRect.height) >= _ground.getPosition().y){
-      _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.height * 0.5f));
+    //sf::FloatRect const playerRect = _player.getGlobalBounds();
+    // if((playerRect.top + playerRect.height) >= _ground.getPosition().y){
+    //   _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.height * 0.5f));
+    //   _velocity.y = 0.0f;
+    // }
+    auto const playerRect = _player.getCollisionBounds();
+    if(playerRect.y.y >= _ground.getPosition().y){
+      _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.y.y - _player.getCenterPoint().y));
       _velocity.y = 0.0f;
     }
   }
@@ -210,16 +215,14 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
-  sf::FloatRect const playerDebugRect = _player.getGlobalBounds();
+  auto const playerDebugRect = _player.getCollisionBounds();
   auto const & loc = _player.getPosition();
   dbg.precision(3);
   dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
   dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
-  dbg << "L\tT\n" << playerDebugRect.left  << '\t' << playerDebugRect.top << '\n'
-      << "W\tH\n" << playerDebugRect.width << '\t' << playerDebugRect.height << '\n'
-      << "B:\t" << playerDebugRect.top +  playerDebugRect.height << '\n'
-      << "R:\t" << playerDebugRect.left +  playerDebugRect.width << '\n';
+  dbg << "L\tT\n" << playerDebugRect.x.x  << '\t' << playerDebugRect.x.y << '\n'
+      << "W\tH\n" << playerDebugRect.y.x << '\t' << playerDebugRect.y.y << '\n';
   _debugText.setString(dbg.str());
 }
 
