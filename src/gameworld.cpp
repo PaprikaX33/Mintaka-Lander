@@ -145,7 +145,6 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  //float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
   float constexpr viewRatio = 800.0f / 600.0f;
   float constexpr primRatio = 1.0f;
   float constexpr secnRatio = 200.0f / 600.0f;
@@ -169,7 +168,6 @@ void GameWorld::resize_viewport(void)
     secn.width = (viewRatio / windowRatio) * secnRatio;
     secn.left  = prim.width + prim.left;
   }
-  //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
   _primary.setViewport(prim);
   _secondary.setViewport(secn);
 }
@@ -198,14 +196,10 @@ void GameWorld::update(void)
       _velocity += boost;
     }
     _player.move(_velocity);
-    //sf::FloatRect const playerRect = _player.getGlobalBounds();
-    // if((playerRect.top + playerRect.height) >= _ground.getPosition().y){
-    //   _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.height * 0.5f));
-    //   _velocity.y = 0.0f;
-    // }
     auto const playerRect = _player.getCollisionBounds();
     if(playerRect.y.y >= _ground.getPosition().y){
-      _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.y.y - _player.getCenterPoint().y));
+      _player.setPosition(_player.getPosition().x, _ground.getPosition().y
+                          - (playerRect.y.y - _player.getCenterPoint().y));
       _velocity.y = 0.0f;
     }
   }

@@ -56,5 +56,5 @@ Player::~Player(void)
 
 sf::Vector2f Player::getCenterPoint(void) const
 {
-  return this->getTransform().transformPoint(10.0f,10.0f);
+  return this->getTransform().transformPoint(this->getOrigin());
 }
