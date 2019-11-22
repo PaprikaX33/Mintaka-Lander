@@ -145,7 +145,6 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  //float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
   float constexpr viewRatio = 800.0f / 600.0f;
   float constexpr primRatio = 1.0f;
   float constexpr secnRatio = 200.0f / 600.0f;
@@ -169,7 +168,6 @@ void GameWorld::resize_viewport(void)
     secn.width = (viewRatio / windowRatio) * secnRatio;
     secn.left  = prim.width + prim.left;
   }
-  //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
   _primary.setViewport(prim);
   _secondary.setViewport(secn);
 }
@@ -198,9 +196,10 @@ void GameWorld::update(void)
       _velocity += boost;
     }
     _player.move(_velocity);
-    sf::FloatRect const playerRect = _player.getGlobalBounds();
-    if((playerRect.top + playerRect.height) >= _ground.getPosition().y){
-      _player.setPosition(_player.getPosition().x, _ground.getPosition().y - (playerRect.height * 0.5f));
+    auto const playerRect = _player.getCollisionBounds();
+    if(playerRect.y.y >= _ground.getPosition().y){
+      _player.setPosition(_player.getPosition().x, _ground.getPosition().y
+                          - (playerRect.y.y - _player.getCenterPoint().y));
       _velocity.y = 0.0f;
     }
   }
@@ -210,16 +209,14 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
-  sf::FloatRect const playerDebugRect = _player.getGlobalBounds();
+  auto const playerDebugRect = _player.getCollisionBounds();
   auto const & loc = _player.getPosition();
   dbg.precision(3);
   dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
   dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
-  dbg << "L\tT\n" << playerDebugRect.left  << '\t' << playerDebugRect.top << '\n'
-      << "W\tH\n" << playerDebugRect.width << '\t' << playerDebugRect.height << '\n'
-      << "B:\t" << playerDebugRect.top +  playerDebugRect.height << '\n'
-      << "R:\t" << playerDebugRect.left +  playerDebugRect.width << '\n';
+  dbg << "L\tT\n" << playerDebugRect.x.x  << '\t' << playerDebugRect.x.y << '\n'
+      << "W\tH\n" << playerDebugRect.y.x << '\t' << playerDebugRect.y.y << '\n';
   _debugText.setString(dbg.str());
 }
 

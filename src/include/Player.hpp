@@ -14,10 +14,11 @@ private:
 private:
   virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
 public:
-  Player();
-  sf::FloatRect getGlobalBounds() const;
-  sf::FloatRect getLocalBounds() const;
-  ~Player();
+  Player(void);
+  sf::Vector2<sf::Vector2f> getCollisionBounds(void) const;
+  sf::Vector2f getCenterPoint(void) const;
+  sf::FloatRect getBounds(void) const;
+  ~Player(void);
 };
 
 #endif //MINTAKA_PLAYER_HEAD_HPP
