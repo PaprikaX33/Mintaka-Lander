@@ -13,7 +13,7 @@ GameWorld::GameWorld():
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
-  _player{sf::Vector2f{20.0f, 20.0f}},
+  _player{},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
@@ -34,10 +34,6 @@ GameWorld::GameWorld():
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
-  _player.setOutlineColor(sf::Color::Green);
-  _player.setFillColor(sf::Color::Transparent);
-  _player.setOutlineThickness(-4.0f);
-  _player.setOrigin(_player.getSize().x * 0.5f, _player.getSize().y * 0.5f);
   _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
   _ground.setOutlineColor(sf::Color::Green);
   _ground.setFillColor(sf::Color::Transparent);
@@ -214,11 +210,16 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
+  sf::FloatRect const playerDebugRect = _player.getGlobalBounds();
   auto const & loc = _player.getPosition();
   dbg.precision(3);
   dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
   dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
+  dbg << "L\tT\n" << playerDebugRect.left  << '\t' << playerDebugRect.top << '\n'
+      << "W\tH\n" << playerDebugRect.width << '\t' << playerDebugRect.height << '\n'
+      << "B:\t" << playerDebugRect.top +  playerDebugRect.height << '\n'
+      << "R:\t" << playerDebugRect.left +  playerDebugRect.width << '\n';
   _debugText.setString(dbg.str());
 }
 

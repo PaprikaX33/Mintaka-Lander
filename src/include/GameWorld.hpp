@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics.hpp>
+#include "Player.hpp"
 
 class GameWorld
 {
@@ -17,7 +18,8 @@ private:
   sf::View _primary;
   sf::View _secondary;
   sf::Clock _clock;
-  sf::RectangleShape _player;
+  //sf::RectangleShape _player;
+  Player _player;
   sf::RectangleShape _background;
   sf::RectangleShape _secondBackground;
   sf::RectangleShape _ground;

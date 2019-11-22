@@ -15,6 +15,9 @@ private:
   virtual void draw(sf::RenderTarget &, sf::RenderStates) const;
 public:
   Player();
+  sf::FloatRect getGlobalBounds() const;
+  sf::FloatRect getLocalBounds() const;
+  ~Player();
 };
 
 #endif //MINTAKA_PLAYER_HEAD_HPP

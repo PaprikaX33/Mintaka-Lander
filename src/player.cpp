@@ -19,3 +19,19 @@ void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
   states.transform *= getTransform();
   target.draw(_sprite, states);
 }
+
+sf::FloatRect Player::getLocalBounds() const
+{
+  return _sprite.getBounds();
+}
+
+sf::FloatRect Player::getGlobalBounds() const
+{
+  //return _sprite.getBounds();
+  return this->getTransform().transformRect(this->getLocalBounds());
+}
+
+Player::~Player()
+{
+
+}
