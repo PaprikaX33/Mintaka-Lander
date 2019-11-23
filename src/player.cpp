@@ -11,6 +11,20 @@ Player::Player(void) :
   _sprite[3] = sf::Vertex{sf::Vector2f{ 0.0f, 20.0f}, sf::Color::Green};
   _sprite[4] = sf::Vertex{sf::Vector2f{10.0f,  0.0f}, sf::Color::Green};
   this->setOrigin(10.0f, 10.0f);
+  this->setPosition(sf::Vector2f{500.0f, 500.0f});
+}
+
+void Player::reset(void)
+{
+  this->setPosition(sf::Vector2f{500.0f, 500.0f});
+  this->setRotation(0.0f);
+  _velocity = sf::Vector2f{0.0f,0.0f};
+}
+
+void Player::apply_movement(float time)
+{
+  (void) time;
+  this->move(_velocity);
 }
 
 void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -57,4 +71,23 @@ Player::~Player(void)
 sf::Vector2f Player::getCenterPoint(void) const
 {
   return this->getTransform().transformPoint(this->getOrigin());
+}
+
+sf::Vector2f const & Player::velocity(sf::Vector2f const & in)
+{
+  _velocity = in;
+  return _velocity;
+}
+sf::Vector2f const & Player::velocity(void)
+{
+  return _velocity;
+}
+sf::Vector2f const & Player::velocity_add(sf::Vector2f const & in)
+{
+  return (_velocity += in);
+}
+
+void Player::vertical_stop(void)
+{
+  _velocity.y = 0.0f;
 }
