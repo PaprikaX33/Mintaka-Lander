@@ -1,5 +1,9 @@
+#include <iostream>
+#include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Player.hpp"
+
+static constexpr std::array<std::size_t, 3> important{0,1,3};
 
 Player::Player(void) :
   _velocity{0.0f, 0.0f},
@@ -44,7 +48,7 @@ sf::Vector2<sf::Vector2f> Player::getCollisionBounds(void) const
   auto const first_node = trns * _sprite[0].position;
   sf::Vector2<sf::Vector2f> bound{{first_node.x, first_node.y},
                                   {first_node.x, first_node.y}};
-  for(std::size_t i = 1; i < 4; i++){
+  for(auto && i : important){
     auto const i_node = trns * _sprite[i].position;
     if(i_node.x < bound.x.x){
       bound.x.x = i_node.x;
@@ -52,13 +56,13 @@ sf::Vector2<sf::Vector2f> Player::getCollisionBounds(void) const
     if(i_node.y < bound.x.y){
       bound.x.y = i_node.y;
     }
-
     if(i_node.x > bound.y.x){
       bound.y.x = i_node.x;
     }
     if(i_node.y > bound.y.y){
       bound.y.y = i_node.y;
     }
+    std::cout << "Checked " << i << '\n';
   }
   return bound;
 }
