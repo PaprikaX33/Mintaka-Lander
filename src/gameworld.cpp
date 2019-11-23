@@ -18,7 +18,6 @@ GameWorld::GameWorld():
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
-  //_velocity{0.0f,0.0f},
   _textFont{},
   _fpsCounter{},
   _debugText{},
@@ -128,9 +127,6 @@ void GameWorld::key_handle(void)
         break;
       case sf::Keyboard::R:
         _player.reset();
-        //_player.setPosition(sf::Vector2f{500.0f,100.0f});
-        //_player.setRotation(0.0f);
-        //_velocity = sf::Vector2f{0.0f, 0.0f};
         _state = GameState::RUNNING;
         break;
       default:
@@ -196,13 +192,11 @@ void GameWorld::update(void)
                          (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
       _player.velocity_add(boost);
     }
-    //_player.move(_velocity);
     _player.apply_movement(0.0f);
     auto const playerRect = _player.getCollisionBounds();
     if(playerRect.y.y >= _ground.getPosition().y){
       _player.setPosition(_player.getPosition().x, _ground.getPosition().y
                           - (playerRect.y.y - _player.getCenterPoint().y));
-      //_velocity.y = 0.0f;
       _player.vertical_stop();
     }
   }

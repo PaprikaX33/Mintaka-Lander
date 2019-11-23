@@ -27,6 +27,7 @@ void Player::reset(void)
 
 void Player::apply_movement(float time)
 {
+  //TODO Do proper movement
   (void) time;
   this->move(_velocity);
 }
