@@ -23,7 +23,6 @@ private:
   sf::RectangleShape _secondBackground;
   sf::RectangleShape _ground;
   sf::RectangleShape _pauseOverlay;
-  //sf::Vector2f _velocity;
   sf::Font _textFont;
   sf::Text _fpsCounter;
   sf::Text _debugText;
