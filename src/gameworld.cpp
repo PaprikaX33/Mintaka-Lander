@@ -13,12 +13,11 @@ GameWorld::GameWorld():
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
-  _player{sf::Vector2f{10.0f, 10.0f}},
+  _player{},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
   _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
-  _velocity{0.0f,0.0f},
   _textFont{},
   _fpsCounter{},
   _debugText{},
@@ -34,10 +33,6 @@ GameWorld::GameWorld():
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
-  _player.setOutlineColor(sf::Color::Green);
-  _player.setFillColor(sf::Color::Transparent);
-  _player.setOutlineThickness(1.0f);
-  _player.setOrigin(_player.getSize().x * 0.5f, _player.getSize().y * 0.5f);
   _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
   _ground.setOutlineColor(sf::Color::Green);
   _ground.setFillColor(sf::Color::Transparent);
@@ -76,21 +71,9 @@ GameWorld::GameWorld():
   _loseText.setCharacterSize(70);
   _loseText.setString("--YOU LOSE--");
   _loseText.setFillColor(sf::Color::Green);
-  //center text
-  sf::FloatRect const pauseRect = _pauseText.getLocalBounds();
-  _pauseText.setOrigin(pauseRect.left + pauseRect.width/2.0f,
-                       pauseRect.top  + pauseRect.height/2.0f);
-  _pauseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
-
-  sf::FloatRect const winRect = _winText.getLocalBounds();
-  _winText.setOrigin(winRect.left + winRect.width/2.0f,
-                       winRect.top  + winRect.height/2.0f);
-  _winText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
-
-  sf::FloatRect const loseRect = _loseText.getLocalBounds();
-  _loseText.setOrigin(loseRect.left + loseRect.width/2.0f,
-                     loseRect.top  + loseRect.height/2.0f);
-  _loseText.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+  this->center_obj(_pauseText);
+  this->center_obj(_winText);
+  this->center_obj(_loseText);
 }
 
 int GameWorld::run()
@@ -139,13 +122,11 @@ void GameWorld::key_handle(void)
           _state = GameState::PAUSED;
           break;
         default:
-            break;
+          break;
         }
         break;
       case sf::Keyboard::R:
-        _player.setPosition(sf::Vector2f{500.0f,100.0f});
-        _player.setRotation(0.0f);
-        _velocity = sf::Vector2f{0.0f, 0.0f};
+        _player.reset();
         _state = GameState::RUNNING;
         break;
       default:
@@ -161,7 +142,6 @@ void GameWorld::key_handle(void)
 void GameWorld::resize_viewport(void)
 {
   float const windowRatio = static_cast<float>(_window.getSize().x) / static_cast<float>(_window.getSize().y);
-  //float const viewRatio = static_cast<float>(_primary.getSize().x) / static_cast<float>(_primary.getSize().y);
   float constexpr viewRatio = 800.0f / 600.0f;
   float constexpr primRatio = 1.0f;
   float constexpr secnRatio = 200.0f / 600.0f;
@@ -185,7 +165,6 @@ void GameWorld::resize_viewport(void)
     secn.width = (viewRatio / windowRatio) * secnRatio;
     secn.left  = prim.width + prim.left;
   }
-  //_primary.setViewport(sf::FloatRect(prim.left, prim.top, prim.width, prim.height));
   _primary.setViewport(prim);
   _secondary.setViewport(secn);
 }
@@ -206,17 +185,19 @@ void GameWorld::update(void)
         _player.rotate(5.0f);
       }
     }
-    _velocity += sf::Vector2f{0.0f, 0.05f};
+    _player.velocity_add(sf::Vector2f{0.0f, 0.05f});
     float const angle = _player.getRotation();
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
       sf::Vector2f boost{0.15f * std::cos((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f),
                          (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
-      _velocity += boost;
+      _player.velocity_add(boost);
     }
-    _player.move(_velocity);
-    if(_player.getPosition().y >= (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f)){
-      _player.setPosition(_player.getPosition().x, (1000.0f - _ground.getSize().y) - (_player.getSize().y * 0.5f));
-      _velocity.y = 0.0f;
+    _player.apply_movement(0.0f);
+    auto const playerRect = _player.getCollisionBounds();
+    if(playerRect.y.y >= _ground.getPosition().y){
+      _player.setPosition(_player.getPosition().x, _ground.getPosition().y
+                          - (playerRect.y.y - _player.getCenterPoint().y));
+      _player.vertical_stop();
     }
   }
 
@@ -225,11 +206,15 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
+  auto const playerDebugRect = _player.getCollisionBounds();
   auto const & loc = _player.getPosition();
+  auto const & velocity = _player.velocity();
   dbg.precision(3);
-  dbg << "X:\t" << loc.x << '\t' << _velocity.x << '\n';
-  dbg << "Y:\t" << loc.y << '\t' << _velocity.y << '\n';
+  dbg << "X:\t" << loc.x << '\t' << velocity.x << '\n';
+  dbg << "Y:\t" << loc.y << '\t' << velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
+  dbg << "L\tT\n" << playerDebugRect.x.x  << '\t' << playerDebugRect.x.y << '\n'
+      << "W\tH\n" << playerDebugRect.y.x << '\t' << playerDebugRect.y.y << '\n';
   _debugText.setString(dbg.str());
 }
 
@@ -263,4 +248,26 @@ void GameWorld::draw(void)
     break;
   }
   _window.display();
+}
+
+template<typename T>
+void center_obj(T & inObj)
+{
+  sf::FloatRect const objRect = inObj.getLocalBounds();
+  inObj.setOrigin(objRect.left + objRect.width/2.0f,
+                  objRect.top  + objRect.height/2.0f);
+  inObj.setPosition(sf::Vector2f(1000.0f/2.0f,1000.0f/2.0f));
+}
+
+void GameWorld::center_obj(sf::Sprite & inObj)
+{
+  return ::center_obj(inObj);
+}
+void GameWorld::center_obj(sf::Text & inObj)
+{
+  return ::center_obj(inObj);
+}
+void GameWorld::center_obj(sf::Shape & inObj)
+{
+  return ::center_obj(inObj);
 }

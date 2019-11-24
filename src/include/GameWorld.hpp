@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics.hpp>
+#include "Player.hpp"
 
 class GameWorld
 {
@@ -17,12 +18,11 @@ private:
   sf::View _primary;
   sf::View _secondary;
   sf::Clock _clock;
-  sf::RectangleShape _player;
+  Player _player;
   sf::RectangleShape _background;
   sf::RectangleShape _secondBackground;
   sf::RectangleShape _ground;
   sf::RectangleShape _pauseOverlay;
-  sf::Vector2f _velocity;
   sf::Font _textFont;
   sf::Text _fpsCounter;
   sf::Text _debugText;
@@ -36,6 +36,9 @@ private:
   GameWorld & operator=(GameWorld const &) = delete;
   GameWorld & operator=(GameWorld &&) = delete;
 
+  void center_obj(sf::Sprite &);
+  void center_obj(sf::Text &);
+  void center_obj(sf::Shape &);
   void resize_viewport(void);
   void update(void);
   void draw(void);
