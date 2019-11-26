@@ -95,4 +95,10 @@ sf::Vector2f const & Player::velocity_add(sf::Vector2f const & in)
 void Player::vertical_stop(void)
 {
   _velocity.y = 0.0f;
+  if(_velocity.x < 0.0f){
+    _velocity.x += 0.1f;
+  }
+  else {
+    _velocity.x -= 0.1f;
+  }
 }
