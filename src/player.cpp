@@ -1,4 +1,3 @@
-#include <iostream>
 #include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Player.hpp"
@@ -63,7 +62,6 @@ sf::Vector2<sf::Vector2f> Player::getCollisionBounds(void) const
     if(i_node.y > bound.y.y){
       bound.y.y = i_node.y;
     }
-    std::cout << "Checked " << i << '\n';
   }
   return bound;
 }
@@ -98,7 +96,7 @@ void Player::vertical_stop(void)
   if(_velocity.x < 0.0f){
     _velocity.x += 0.1f;
   }
-  else {
+  else{
     _velocity.x -= 0.1f;
   }
 }

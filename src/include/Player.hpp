@@ -15,13 +15,13 @@ private:
   virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 public:
   Player(void);
+  virtual ~Player(void) override;
   sf::Vector2f const & velocity(sf::Vector2f const &);
   sf::Vector2f const & velocity(void);
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
   sf::Vector2<sf::Vector2f> getCollisionBounds(void) const;
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
-  virtual ~Player(void) override;
   void reset(void);
   void apply_movement(float);
   void vertical_stop(void);
