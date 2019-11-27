@@ -3,6 +3,7 @@ set(MAIN_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/gameworld.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/icon.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ground.cpp
   CACHE PATH "Main source files")
 
 add_subdirectory(include)
