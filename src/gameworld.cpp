@@ -14,9 +14,9 @@ GameWorld::GameWorld():
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
   _player{},
+  _ground{},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
-  _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
   _textFont{},
   _fpsCounter{},
@@ -33,10 +33,10 @@ GameWorld::GameWorld():
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
   _player.setPosition(sf::Vector2f{500.0f,100.0f});
-  _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
-  _ground.setOutlineColor(sf::Color::Green);
-  _ground.setFillColor(sf::Color::Transparent);
-  _ground.setOutlineThickness(1.0f);
+  // _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
+  // _ground.setOutlineColor(sf::Color::Green);
+  // _ground.setFillColor(sf::Color::Transparent);
+  // _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   _secondBackground.setPosition(sf::Vector2f{0.0f,0.0f});
@@ -194,8 +194,8 @@ void GameWorld::update(void)
     }
     _player.apply_movement(0.0f);
     auto const playerRect = _player.getCollisionBounds();
-    if(playerRect.y.y >= _ground.getPosition().y){
-      _player.setPosition(_player.getPosition().x, _ground.getPosition().y
+    if(playerRect.y.y >= 50.0f){ //FIX THIS HACK
+      _player.setPosition(_player.getPosition().x, 50.0f
                           - (playerRect.y.y - _player.getCenterPoint().y));
       _player.vertical_stop();
     }

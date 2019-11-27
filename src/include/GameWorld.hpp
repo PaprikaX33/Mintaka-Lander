@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics.hpp>
 #include "Player.hpp"
+#include "Ground.hpp"
 
 class GameWorld
 {
@@ -19,9 +20,9 @@ private:
   sf::View _secondary;
   sf::Clock _clock;
   Player _player;
+  Ground _ground;
   sf::RectangleShape _background;
   sf::RectangleShape _secondBackground;
-  sf::RectangleShape _ground;
   sf::RectangleShape _pauseOverlay;
   sf::Font _textFont;
   sf::Text _fpsCounter;
