@@ -1,5 +1,6 @@
 #ifndef MINTAKA_GROUND_HEAD_HPP
 #define MINTAKA_GROUND_HEAD_HPP
+#include <vector>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transform.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -14,7 +15,7 @@ public:
 private:
   virtual void draw(sf::RenderTarget &, sf::RenderStates) const override;
 public:
-  Ground(void);
+  Ground(std::vector<std::size_t> const &);
   virtual ~Ground(void) override;
 };
 
