@@ -32,11 +32,6 @@ GameWorld::GameWorld():
   }
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
-  _player.setPosition(sf::Vector2f{500.0f,100.0f});
-  // _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
-  // _ground.setOutlineColor(sf::Color::Green);
-  // _ground.setFillColor(sf::Color::Transparent);
-  // _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   _secondBackground.setPosition(sf::Vector2f{0.0f,0.0f});
@@ -193,12 +188,9 @@ void GameWorld::update(void)
       _player.velocity_add(boost);
     }
     _player.apply_movement(0.0f);
-    auto const playerRect = _player.getCollisionBounds();
-    if(playerRect.y.y >= 1000.0f - 50.0f){ //FIX THIS HACK
-      _player.setPosition(_player.getPosition().x, 1000.0f - 50.0f
-                          - (playerRect.y.y - _player.getCenterPoint().y));
-      _player.vertical_stop();
-    }
+    auto [playerExtremLeft, playerExtremRight] = _player.getHorizontalExtremities();
+    _player.collisionCheck(_ground.getHeight(playerExtremLeft),
+                           _ground.getHeight(playerExtremRight));
   }
 
   std::stringstream stream;
@@ -206,15 +198,12 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
-  auto const playerDebugRect = _player.getCollisionBounds();
   auto const & loc = _player.getPosition();
   auto const & velocity = _player.velocity();
   dbg.precision(3);
   dbg << "X:\t" << loc.x << '\t' << velocity.x << '\n';
   dbg << "Y:\t" << loc.y << '\t' << velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
-  dbg << "L\tT\n" << playerDebugRect.x.x  << '\t' << playerDebugRect.x.y << '\n'
-      << "W\tH\n" << playerDebugRect.y.x << '\t' << playerDebugRect.y.y << '\n';
   _debugText.setString(dbg.str());
 }
 

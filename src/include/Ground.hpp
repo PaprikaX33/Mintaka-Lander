@@ -1,6 +1,7 @@
 #ifndef MINTAKA_GROUND_HEAD_HPP
 #define MINTAKA_GROUND_HEAD_HPP
 #include <vector>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transform.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -17,6 +18,8 @@ private:
 public:
   Ground(std::vector<std::size_t> const &);
   virtual ~Ground(void) override;
+
+  sf::Vector2f getHeight(float x_dir) const;
 };
 
 #endif //MINTAKA_GROUND_HEAD_HPP

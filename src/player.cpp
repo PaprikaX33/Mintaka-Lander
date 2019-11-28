@@ -1,3 +1,4 @@
+#include <iostream>
 #include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Player.hpp"
@@ -42,30 +43,27 @@ sf::FloatRect Player::getBounds(void) const
   return _sprite.getBounds();
 }
 
-sf::Vector2<sf::Vector2f> Player::getCollisionBounds(void) const
+std::pair<float, float> Player::getHorizontalExtremities(void) const
 {
-  auto const & trns= this->getTransform();
-  auto const first_node = trns * _sprite[0].position;
-  sf::Vector2<sf::Vector2f> bound{{first_node.x, first_node.y},
-                                  {first_node.x, first_node.y}};
+  auto const & trans = this->getTransform();
+  float initial = (trans * _sprite[0].position).x;
+  std::pair<float, float> bound = std::make_pair(initial, initial);
   for(auto && i : important){
-    auto const i_node = trns * _sprite[i].position;
-    if(i_node.x < bound.x.x){
-      bound.x.x = i_node.x;
+    float current = (trans * _sprite[i].position).x;
+    if(current < bound.first){
+      bound.first = current;
     }
-    if(i_node.y < bound.x.y){
-      bound.x.y = i_node.y;
-    }
-    if(i_node.x > bound.y.x){
-      bound.y.x = i_node.x;
-    }
-    if(i_node.y > bound.y.y){
-      bound.y.y = i_node.y;
+    if(current > bound.second){
+      bound.second = current;
     }
   }
   return bound;
 }
 
+void Player::collisionCheck(sf::Vector2f l, sf::Vector2f r)
+{
+  std::cout << "left " <<  l.x << ',' << l.y <<  " right "  <<  r.x << ',' << r.y << '\n';
+}
 Player::~Player(void)
 {
 

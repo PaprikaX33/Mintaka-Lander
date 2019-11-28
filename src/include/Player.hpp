@@ -1,5 +1,6 @@
 #ifndef MINTAKA_PLAYER_HEAD_HPP
 #define MINTAKA_PLAYER_HEAD_HPP
+#include <tuple>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -19,7 +20,8 @@ public:
   sf::Vector2f const & velocity(sf::Vector2f const &);
   sf::Vector2f const & velocity(void);
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
-  sf::Vector2<sf::Vector2f> getCollisionBounds(void) const;
+  void collisionCheck(sf::Vector2f, sf::Vector2f);
+  std::pair<float, float> getHorizontalExtremities(void) const;
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
   void reset(void);
