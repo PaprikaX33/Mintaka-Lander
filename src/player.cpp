@@ -62,7 +62,10 @@ std::pair<float, float> Player::getHorizontalExtremities(void) const
 
 void Player::collisionCheck(sf::Vector2f l, sf::Vector2f r)
 {
-  std::cout << "left " <<  l.x << ',' << l.y <<  " right "  <<  r.x << ',' << r.y << '\n';
+  //Convert from Ground Height to world height, where 1000.0f is bottom, and 0.0f is top
+  float const leftHeight = 1000.0f - l.y;
+  float const rightHeight = 1000.0f - r.y;
+  std::cout << "left " <<  l.x << ',' << leftHeight <<  " right "  <<  r.x << ',' << rightHeight << '\n';
 }
 Player::~Player(void)
 {
