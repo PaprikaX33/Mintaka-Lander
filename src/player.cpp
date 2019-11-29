@@ -43,30 +43,23 @@ sf::FloatRect Player::getBounds(void) const
   return _sprite.getBounds();
 }
 
-std::pair<float, float> Player::getHorizontalExtremities(void) const
+void Player::collisionCheck(Ground const & grnd)
 {
   auto const & trans = this->getTransform();
-  float initial = (trans * _sprite[0].position).x;
-  std::pair<float, float> bound = std::make_pair(initial, initial);
-  for(auto && i : important){
-    float current = (trans * _sprite[i].position).x;
-    if(current < bound.first){
-      bound.first = current;
+  for(auto const & i : important){
+    sf::Vector2f absPos = trans * _sprite[i].position;
+    float const diff = grnd.objRelHeight(absPos);
+    if(diff < 0.0f){
+      std::cout << "\x1B[93m";
+      this->move(0.0f, diff);
+      //this->_velocity = sf::Vector2f{_velocity.x, 0.0f};
+      this->_velocity = sf::Vector2f{0.0f, 0.0f};
     }
-    if(current > bound.second){
-      bound.second = current;
-    }
+    std::cout << i << " : " << diff << " : " << absPos.x << ',' << absPos.y  << "\n\x1B[0m";
   }
-  return bound;
+  std::cout << '\n';
 }
 
-void Player::collisionCheck(sf::Vector2f l, sf::Vector2f r)
-{
-  //Convert from Ground Height to world height, where 1000.0f is bottom, and 0.0f is top
-  float const leftHeight = 1000.0f - l.y;
-  float const rightHeight = 1000.0f - r.y;
-  std::cout << "left " <<  l.x << ',' << leftHeight <<  " right "  <<  r.x << ',' << rightHeight << '\n';
-}
 Player::~Player(void)
 {
 

@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
+#include "Ground.hpp"
 
 class Player final : public sf::Drawable,
                      public sf::Transformable
@@ -20,8 +21,7 @@ public:
   sf::Vector2f const & velocity(sf::Vector2f const &);
   sf::Vector2f const & velocity(void);
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
-  void collisionCheck(sf::Vector2f, sf::Vector2f);
-  std::pair<float, float> getHorizontalExtremities(void) const;
+  void collisionCheck(Ground const &);
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
   void reset(void);

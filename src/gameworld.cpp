@@ -188,9 +188,7 @@ void GameWorld::update(void)
       _player.velocity_add(boost);
     }
     _player.apply_movement(0.0f);
-    auto [playerExtremLeft, playerExtremRight] = _player.getHorizontalExtremities();
-    _player.collisionCheck(_ground.getHeight(playerExtremLeft),
-                           _ground.getHeight(playerExtremRight));
+    _player.collisionCheck(_ground);
   }
 
   std::stringstream stream;

@@ -35,20 +35,21 @@ void Ground::draw(sf::RenderTarget & target, sf::RenderStates states) const
   target.draw(_sprite, states);
 }
 
-sf::Vector2f Ground::getHeight(float x_dir) const
+float Ground::objRelHeight(sf::Vector2f const & pos) const
 {
-  if(x_dir <= 0.0f){
-    return sf::Vector2f{x_dir, _sprite[0].position.y};
+  //TODO : This seems broken
+  if(pos.x <= 0.0f){
+    return ((_anchor * _sprite[0].position).y) - pos.y;
   }
-  if(x_dir >= 1000.0f){
-    return sf::Vector2f{x_dir, _sprite[10].position.y};
+  if(pos.x >= 1000.0f){
+    return ((_anchor * _sprite[10].position).y) - pos.y;
   }
-  float const x_rel = x_dir / 100.0f;
+  float const x_rel = pos.x / 100.0f;
   std::size_t const left_bound = static_cast<std::size_t>(std::floor(x_rel));
-  float const x_diff = x_dir - std::floor(x_dir);
-  float const lower = _sprite[left_bound].position.y;
-  float const higher = _sprite[left_bound + 1].position.y;
+  float const x_diff = pos.x - std::floor(pos.x);
+  float const lower = (_anchor * _sprite[left_bound].position).y;
+  float const higher = (_anchor * _sprite[left_bound + 1].position).y;
   float const gradient = (higher - lower) / 100.0f;
   float const y_dir = (gradient * x_diff) + lower;
-  return sf::Vector2f{x_dir, y_dir};
+  return y_dir - pos.y;
 }

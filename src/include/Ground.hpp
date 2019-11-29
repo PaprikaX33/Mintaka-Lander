@@ -18,8 +18,7 @@ private:
 public:
   Ground(std::vector<std::size_t> const &);
   virtual ~Ground(void) override;
-
-  sf::Vector2f getHeight(float x_dir) const;
+  float objRelHeight(sf::Vector2f const & pos) const;
 };
 
 #endif //MINTAKA_GROUND_HEAD_HPP
