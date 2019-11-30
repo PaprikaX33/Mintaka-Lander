@@ -1,5 +1,4 @@
 #include <sstream>
-#include <iostream>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <SFML/Window.hpp>
@@ -14,9 +13,9 @@ GameWorld::GameWorld():
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
   _player{},
+  _ground{{1,3,1,5,1,3}},
   _background{sf::Vector2f{1000.0f, 1000.0f}},
   _secondBackground{sf::Vector2f{1000.0f, 1000.0f}},
-  _ground{sf::Vector2f{1000.0f, 50.0f}},
   _pauseOverlay{sf::Vector2f{1000.0f, 1000.0f}},
   _textFont{},
   _fpsCounter{},
@@ -32,11 +31,6 @@ GameWorld::GameWorld():
   }
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
-  _player.setPosition(sf::Vector2f{500.0f,100.0f});
-  _ground.setPosition(sf::Vector2f{0.0f,1000.0f - _ground.getSize().y});
-  _ground.setOutlineColor(sf::Color::Green);
-  _ground.setFillColor(sf::Color::Transparent);
-  _ground.setOutlineThickness(1.0f);
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
   _background.setFillColor(sf::Color::Black);
   _secondBackground.setPosition(sf::Vector2f{0.0f,0.0f});
@@ -193,12 +187,7 @@ void GameWorld::update(void)
       _player.velocity_add(boost);
     }
     _player.apply_movement(0.0f);
-    auto const playerRect = _player.getCollisionBounds();
-    if(playerRect.y.y >= _ground.getPosition().y){
-      _player.setPosition(_player.getPosition().x, _ground.getPosition().y
-                          - (playerRect.y.y - _player.getCenterPoint().y));
-      _player.vertical_stop();
-    }
+    _player.collisionCheck(_ground);
   }
 
   std::stringstream stream;
@@ -206,15 +195,12 @@ void GameWorld::update(void)
   _clock.restart();
   _fpsCounter.setString(stream.str());
   std::stringstream dbg;
-  auto const playerDebugRect = _player.getCollisionBounds();
   auto const & loc = _player.getPosition();
   auto const & velocity = _player.velocity();
   dbg.precision(3);
   dbg << "X:\t" << loc.x << '\t' << velocity.x << '\n';
   dbg << "Y:\t" << loc.y << '\t' << velocity.y << '\n';
   dbg << "Ort:\t" << _player.getRotation() << '\n';
-  dbg << "L\tT\n" << playerDebugRect.x.x  << '\t' << playerDebugRect.x.y << '\n'
-      << "W\tH\n" << playerDebugRect.y.x << '\t' << playerDebugRect.y.y << '\n';
   _debugText.setString(dbg.str());
 }
 

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Player.hpp"
@@ -43,29 +42,20 @@ sf::FloatRect Player::getBounds(void) const
   return _sprite.getBounds();
 }
 
-sf::Vector2<sf::Vector2f> Player::getCollisionBounds(void) const
+void Player::collisionCheck(Ground const & grnd)
 {
-  auto const & trns= this->getTransform();
-  auto const first_node = trns * _sprite[0].position;
-  sf::Vector2<sf::Vector2f> bound{{first_node.x, first_node.y},
-                                  {first_node.x, first_node.y}};
-  for(auto && i : important){
-    auto const i_node = trns * _sprite[i].position;
-    if(i_node.x < bound.x.x){
-      bound.x.x = i_node.x;
+  auto const & trans = this->getTransform();
+  for(auto const & i : important){
+    //TODO add check for ground piercing the open end
+    sf::Vector2f absPos = trans * _sprite[i].position;
+    float const diff = grnd.objRelHeight(absPos);
+    if(diff < 0.0f){
+      //TODO do the proper uphill / downhill calculation
+      float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
+      this->move(0.0f, diff);
+      this->_velocity = sf::Vector2f{frictionX, 0.0f};
     }
-    if(i_node.y < bound.x.y){
-      bound.x.y = i_node.y;
-    }
-    if(i_node.x > bound.y.x){
-      bound.y.x = i_node.x;
-    }
-    if(i_node.y > bound.y.y){
-      bound.y.y = i_node.y;
-    }
-    std::cout << "Checked " << i << '\n';
   }
-  return bound;
 }
 
 Player::~Player(void)
@@ -95,4 +85,10 @@ sf::Vector2f const & Player::velocity_add(sf::Vector2f const & in)
 void Player::vertical_stop(void)
 {
   _velocity.y = 0.0f;
+  if(_velocity.x < 0.0f){
+    _velocity.x += 0.1f;
+  }
+  else{
+    _velocity.x -= 0.1f;
+  }
 }
