@@ -25,7 +25,7 @@ GameWorld::GameWorld():
   _loseText{},
   _state{GameState::RUNNING}
 {
-  char const * const fontDir = "./font/TheFont.ttf";
+  char const * const fontDir = "./font/SztyletBd.otf";
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
