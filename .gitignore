@@ -81,7 +81,5 @@ build/
 #DOXYGEN
 docs/
 
-#Font should be supplied separately
-font/
 #note file
 *.note
