@@ -46,6 +46,7 @@ void Player::collisionCheck(Ground const & grnd)
 {
   auto const & trans = this->getTransform();
   for(auto const & i : important){
+    //TODO add check for ground piercing the open end
     sf::Vector2f absPos = trans * _sprite[i].position;
     float const diff = grnd.objRelHeight(absPos);
     if(diff < 0.0f){
