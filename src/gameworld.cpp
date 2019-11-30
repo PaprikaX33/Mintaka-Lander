@@ -1,5 +1,4 @@
 #include <sstream>
-#include <iostream>
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <SFML/Window.hpp>

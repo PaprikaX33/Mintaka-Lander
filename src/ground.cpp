@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cmath>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -38,7 +37,6 @@ void Ground::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 float Ground::objRelHeight(sf::Vector2f const & pos) const
 {
-  //TODO : This seems broken
   if(pos.x <= 0.0f){
     return ((_anchor * _sprite[0].position).y) - pos.y;
   }
@@ -47,17 +45,11 @@ float Ground::objRelHeight(sf::Vector2f const & pos) const
   }
   float const x_rel = pos.x / 100.0f;
   std::size_t const left_bound = static_cast<std::size_t>(std::floor(x_rel));
-  //  float const x_diff = pos.x - std::floor(pos.x);
   float const x_diff = pos.x - (static_cast<float>(left_bound) * 100.0f);
   float const lower = (_sprite[left_bound].position).y;
   float const higher = (_sprite[left_bound + 1].position).y;
   float const gradient = (higher - lower) / 100.0f;
   float const y_dir = (gradient * x_diff) + lower;
   sf::Vector2f const groundPoint = _anchor * sf::Vector2f{pos.x, y_dir};
-  std::cout << "\x1B[32m"
-            << left_bound << " << " << lower << " , " << higher << " m " << gradient
-            << " GR " << groundPoint.x <<  ','  << groundPoint.y << "\n\x1B[35m"
-            << "HEX: " << x_diff
-            << "\n\x1B[0m";
   return groundPoint.y - pos.y;
 }

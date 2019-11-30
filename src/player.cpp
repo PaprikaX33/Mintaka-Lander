@@ -1,4 +1,3 @@
-#include <iostream>
 #include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "Player.hpp"
@@ -50,14 +49,12 @@ void Player::collisionCheck(Ground const & grnd)
     sf::Vector2f absPos = trans * _sprite[i].position;
     float const diff = grnd.objRelHeight(absPos);
     if(diff < 0.0f){
-      std::cout << "\x1B[93m";
+      //TODO do the proper uphill / downhill calculation
+      float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
       this->move(0.0f, diff);
-      //this->_velocity = sf::Vector2f{_velocity.x, 0.0f};
-      this->_velocity = sf::Vector2f{0.0f, 0.0f};
+      this->_velocity = sf::Vector2f{frictionX, 0.0f};
     }
-    std::cout << i << " : " << diff << " : " << absPos.x << ',' << absPos.y  << "\n\x1B[0m";
   }
-  std::cout << '\n';
 }
 
 Player::~Player(void)
