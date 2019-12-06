@@ -12,7 +12,7 @@ struct commaSeparator : std::ctype<char> {
     {
         static std::vector<mask> v(classic_table(), classic_table() + table_size);
         v[','] |= static_cast<mask>(std::ctype_base::space);
-        //v[' '] &= static_cast<mask>(~std::ctype_base::space);
+        v[' '] &= static_cast<mask>(~std::ctype_base::space);
         return &v[0];
     }
 }; //Modified from the example on https://en.cppreference.com/w/cpp/locale/ctype_char,
@@ -32,9 +32,12 @@ Ground Ground::generate_file(char const * fname)
   file.imbue(std::locale(file.getloc(), new commaSeparator{}));
 
   //Testing
-  std::size_t word;
+  std::string word;
   while(file >> word) {
-    std::cout << "IS GOOD : " << (file.good() ? "YES" : "NO") << "\t: " << word << '\n';
+    std::istringstream strm{word};
+    std::size_t data;
+    strm >> data;
+    std::cout << "IS GOOD : " << (file.good() ? "YES" : "NO") << "\t: " << word << "\tParsed:" << data << '\n';
   }
   std::cout << "Good: " << (file.good() ? "YES" : "NO") << '\n';
   std::cout << "fail: " << (file.fail() ? "YES" : "NO") << '\n';
