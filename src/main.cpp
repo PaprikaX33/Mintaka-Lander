@@ -15,8 +15,9 @@ int main(int argc, char ** argv)
   std::cout << '\n';
   int retcode = -1;
   try{
-    GameWorld game;
-    retcode = game.run();
+    auto testing = Ground::generate_file("foo.txt");
+    // GameWorld game;
+    // retcode = game.run();
   }
   catch(Exc::Base &e){
     std::cerr << "Exception: " << e.excID() << " : "<< e.what() << '\n';
