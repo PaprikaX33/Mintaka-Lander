@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string_view>
 #include "Ground.hpp"
+#include "ParseGround.hpp"
 
 struct commaSeparator : std::ctype<char> {
   commaSeparator(std::size_t refs = 0) : ctype<char>(make_table(), false, refs) {}
@@ -33,11 +34,23 @@ Ground Ground::generate_file(char const * fname)
 
   //Testing
   std::string word;
+  std::size_t count = 0;
   while(file >> word) {
     std::istringstream strm{word};
     std::size_t data;
     strm >> data;
+    temp.emplace_back(data);
+    if(!strm.eof()){
+      //Error
+      //TODO : Trailing whitespace is considered as error
+      throw Exc::GroundParse{count};
+    }
+    count++;
     std::cout << "IS GOOD : " << (file.good() ? "YES" : "NO") << "\t: " << word << "\tParsed:" << data << '\n';
+  }
+  if(!file.eof()){
+    //Error
+    throw Exc::GroundParse{count};
   }
   std::cout << "Good: " << (file.good() ? "YES" : "NO") << '\n';
   std::cout << "fail: " << (file.fail() ? "YES" : "NO") << '\n';

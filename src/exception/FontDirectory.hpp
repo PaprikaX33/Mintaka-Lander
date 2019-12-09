@@ -5,7 +5,7 @@
 
 namespace Exc
 {
-  class FontDir : public Exc::Base
+  class FontDir final : public Exc::Base
   {
   public:
     FontDir(void) :
