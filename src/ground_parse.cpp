@@ -26,10 +26,6 @@ Ground Ground::generate_file(char const * fname)
   std::vector<std::size_t> temp;
   file.exceptions(std::ifstream::badbit);
   file.open(fname);
-  // std::string const data = [&] (void) {
-  //                            std::ostringstream tmp;
-  //                            tmp << file.rdbuf();
-  //                            return tmp.str();} ();
   file.imbue(std::locale(file.getloc(), new commaSeparator{}));
 
   //Testing
@@ -40,13 +36,15 @@ Ground Ground::generate_file(char const * fname)
     std::size_t data;
     strm >> data;
     temp.emplace_back(data);
+    count++;
+    std::cout << word << "\tParsed:" << data;
+    strm >> data;
     if(!strm.eof()){
       //Error
-      //TODO : Trailing whitespace is considered as error
+      //TODO : Double input, is not considered as error
       throw Exc::GroundParse{count};
     }
-    count++;
-    std::cout << "IS GOOD : " << (file.good() ? "YES" : "NO") << "\t: " << word << "\tParsed:" << data << '\n';
+    std::cout << '\t' << (strm.eof() ? "HI" : "LO") << '\t' << data << '\n';
   }
   if(!file.eof()){
     //Error
