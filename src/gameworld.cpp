@@ -8,7 +8,7 @@
 #include "Icon.hpp"
 
 GameWorld::GameWorld():
-  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
+  _window{},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
@@ -29,6 +29,7 @@ GameWorld::GameWorld():
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
+  _window.create(sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
@@ -72,7 +73,7 @@ GameWorld::GameWorld():
 
 //TODO : Refactor this constructor. This constructor is an exact copy with the void constructor except the _ground
 GameWorld::GameWorld(char const * grname):
-  _window{sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize},
+  _window{},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
   _secondary{sf::FloatRect{0.0, 0.0f, (200.0f / 600.0f) * 1000.0f, 1000.0f}},
   _clock{},
@@ -93,6 +94,7 @@ GameWorld::GameWorld(char const * grname):
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
+  _window.create(sf::VideoMode(800.0f, 600.0f), "Mintaka", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
   _window.setFramerateLimit(60);
   _window.setIcon(icon::width(), icon::height(), icon::data());
   _background.setPosition(sf::Vector2f{0.0f,0.0f});
