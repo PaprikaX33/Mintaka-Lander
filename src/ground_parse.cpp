@@ -23,14 +23,14 @@ Ground Ground::generate_file(char const * fname)
 {
   std::ifstream file;
   std::vector<std::size_t> temp;
-  file.exceptions(std::ifstream::badbit);
+  file.exceptions(std::ifstream::failbit);
   file.open(fname);
   file.imbue(std::locale(file.getloc(), new commaSeparator{}));
 
   //Testing
   std::string word;
   std::size_t count = 0;
-  while(file >> word) {
+  while(file >> word && count <= 10) {
     //TODO : This seems so resourcefull and unoptimized
     std::istringstream strm{word};
     std::ostringstream backBuffer;
@@ -39,13 +39,11 @@ Ground Ground::generate_file(char const * fname)
       backBuffer << middleBuffer;
     }
     middleBuffer = backBuffer.str();
-    //std::cout << "BUFFER: " << middleBuffer << '\t';
     strm = std::istringstream{middleBuffer};
     std::size_t data;
     strm >> data;
     temp.emplace_back(data);
     count++;
-    //std::cout << word << "\tParsed:" << data;
     if(!strm.eof()){
       //Error
       throw Exc::GroundParse{count};
