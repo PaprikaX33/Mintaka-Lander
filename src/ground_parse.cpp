@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <sstream>
 #include <string_view>
@@ -40,26 +39,17 @@ Ground Ground::generate_file(char const * fname)
       backBuffer << middleBuffer;
     }
     middleBuffer = backBuffer.str();
-    std::cout << "BUFFER: " << middleBuffer << '\t';
+    //std::cout << "BUFFER: " << middleBuffer << '\t';
     strm = std::istringstream{middleBuffer};
     std::size_t data;
     strm >> data;
     temp.emplace_back(data);
     count++;
-    std::cout << word << "\tParsed:" << data;
+    //std::cout << word << "\tParsed:" << data;
     if(!strm.eof()){
       //Error
       throw Exc::GroundParse{count};
     }
-    std::cout << '\t' << (strm.eof() ? "HI" : "LO") << '\t' << data << '\n';
   }
-  if(!file.eof()){
-    //Error
-    throw Exc::GroundParse{count};
-  }
-  std::cout << "Good: " << (file.good() ? "YES" : "NO") << '\n';
-  std::cout << "fail: " << (file.fail() ? "YES" : "NO") << '\n';
-  std::cout << "Bad : " << (file.bad() ? "YES" : "NO") << '\n';
-  std::cout << "EOF : " << (file.eof() ? "YES" : "NO") << '\n';
   return Ground{temp};
 }
