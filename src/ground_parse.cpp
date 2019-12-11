@@ -32,16 +32,23 @@ Ground Ground::generate_file(char const * fname)
   std::string word;
   std::size_t count = 0;
   while(file >> word) {
+    //TODO : This seems so resourcefull and unoptimized
     std::istringstream strm{word};
+    std::ostringstream backBuffer;
+    std::string middleBuffer;
+    while(strm >> middleBuffer){
+      backBuffer << middleBuffer;
+    }
+    middleBuffer = backBuffer.str();
+    std::cout << "BUFFER: " << middleBuffer << '\t';
+    strm = std::istringstream{middleBuffer};
     std::size_t data;
     strm >> data;
     temp.emplace_back(data);
     count++;
     std::cout << word << "\tParsed:" << data;
-    strm >> data;
     if(!strm.eof()){
       //Error
-      //TODO : Double input, is not considered as error
       throw Exc::GroundParse{count};
     }
     std::cout << '\t' << (strm.eof() ? "HI" : "LO") << '\t' << data << '\n';
