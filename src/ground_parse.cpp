@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string_view>
 #include "Ground.hpp"
+#include "InvalidGroundHeight.hpp"
 #include "ParseGround.hpp"
 
 struct commaSeparator : std::ctype<char> {
@@ -44,6 +45,9 @@ Ground Ground::generate_file(char const * fname)
     strm = std::istringstream{middleBuffer};
     std::size_t data;
     strm >> data;
+    if(data > 9){
+      throw Exc::InvalidGroundHeight{count};
+    }
     temp.emplace_back(data);
     count++;
     if(!strm.eof()){
