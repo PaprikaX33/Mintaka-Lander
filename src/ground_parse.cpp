@@ -23,8 +23,10 @@ Ground Ground::generate_file(char const * fname)
 {
   std::ifstream file;
   std::vector<std::size_t> temp;
-  file.exceptions(std::ifstream::failbit);
   file.open(fname);
+  if(file.fail()){
+    throw std::ios_base::failure{"File not found"};
+  }
   file.imbue(std::locale(file.getloc(), new commaSeparator{}));
 
   //Testing
