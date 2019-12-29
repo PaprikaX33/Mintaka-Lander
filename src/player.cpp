@@ -24,26 +24,12 @@ void Player::reset(void)
   _velocity = sf::Vector2f{0.0f,0.0f};
 }
 
-void Player::apply_movement(float time)
+void Player::apply_movement(float time, Ground const & grnd)
 {
   //TODO Do proper movement
   (void) time;
   this->move(_velocity);
-}
 
-void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-  states.transform *= getTransform();
-  target.draw(_sprite, states);
-}
-
-sf::FloatRect Player::getBounds(void) const
-{
-  return _sprite.getBounds();
-}
-
-void Player::collisionCheck(Ground const & grnd)
-{
   auto const & trans = this->getTransform();
   for(auto const & i : important){
     //TODO add check for ground piercing the open end
@@ -56,6 +42,17 @@ void Player::collisionCheck(Ground const & grnd)
       this->_velocity = sf::Vector2f{frictionX, 0.0f};
     }
   }
+}
+
+void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+  states.transform *= getTransform();
+  target.draw(_sprite, states);
+}
+
+sf::FloatRect Player::getBounds(void) const
+{
+  return _sprite.getBounds();
 }
 
 Player::~Player(void)

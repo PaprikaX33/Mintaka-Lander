@@ -21,11 +21,10 @@ public:
   sf::Vector2f const & velocity(sf::Vector2f const &);
   sf::Vector2f const & velocity(void);
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
-  void collisionCheck(Ground const &);
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
   void reset(void);
-  void apply_movement(float);
+  void apply_movement(float time, Ground const &);
   void vertical_stop(void);
 };
 

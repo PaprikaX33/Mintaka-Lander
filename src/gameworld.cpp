@@ -252,8 +252,7 @@ void GameWorld::update(void)
                          (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
       _player.velocity_add(boost);
     }
-    _player.apply_movement(0.0f);
-    _player.collisionCheck(_ground);
+    _player.apply_movement(0.0f, _ground);
   }
 
   std::stringstream stream;
