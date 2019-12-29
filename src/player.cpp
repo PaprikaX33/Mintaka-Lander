@@ -28,6 +28,7 @@ void Player::apply_movement(float time, Ground const & grnd)
 {
   //TODO Do proper movement
   (void) time;
+  auto const from {this->getPosition()};
   this->move(_velocity);
 
   auto const & trans = this->getTransform();
@@ -40,8 +41,16 @@ void Player::apply_movement(float time, Ground const & grnd)
       float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
       this->move(0.0f, diff);
       this->_velocity = sf::Vector2f{frictionX, 0.0f};
+      auto const to {this->getPosition()};
+      if(from.y > to.y){
+        this->_velocity.x -= (_velocity.x < 0 ? -0.01f : 0.01f);
+      }
+      else {
+        this->_velocity.x += (_velocity.x < 0 ? -0.01f : 0.01f);
+      }
     }
   }
+
 }
 
 void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
