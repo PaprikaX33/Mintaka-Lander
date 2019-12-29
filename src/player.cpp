@@ -24,11 +24,34 @@ void Player::reset(void)
   _velocity = sf::Vector2f{0.0f,0.0f};
 }
 
-void Player::apply_movement(float time)
+void Player::apply_movement(float time, Ground const & grnd)
 {
   //TODO Do proper movement
   (void) time;
+  auto const from {this->getPosition()};
   this->move(_velocity);
+
+  auto const & trans = this->getTransform();
+  for(auto const & i : important){
+    //TODO add check for ground piercing the open end
+    sf::Vector2f absPos = trans * _sprite[i].position;
+    float const diff = grnd.objRelHeight(absPos);
+    if(diff < 0.0f){
+      float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
+      this->move(0.0f, diff);
+      this->_velocity = sf::Vector2f{frictionX, 0.0f};
+      auto const to {this->getPosition()};
+
+      //TODO fix this hack-ish uphill/downhill calculation
+      if(from.y > to.y){
+        this->_velocity.x -= (_velocity.x < 0 ? -0.01f : 0.01f);
+      }
+      else {
+        this->_velocity.x += (_velocity.x < 0 ? -0.01f : 0.01f);
+      }
+    }
+  }
+
 }
 
 void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -40,22 +63,6 @@ void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
 sf::FloatRect Player::getBounds(void) const
 {
   return _sprite.getBounds();
-}
-
-void Player::collisionCheck(Ground const & grnd)
-{
-  auto const & trans = this->getTransform();
-  for(auto const & i : important){
-    //TODO add check for ground piercing the open end
-    sf::Vector2f absPos = trans * _sprite[i].position;
-    float const diff = grnd.objRelHeight(absPos);
-    if(diff < 0.0f){
-      //TODO do the proper uphill / downhill calculation
-      float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
-      this->move(0.0f, diff);
-      this->_velocity = sf::Vector2f{frictionX, 0.0f};
-    }
-  }
 }
 
 Player::~Player(void)
