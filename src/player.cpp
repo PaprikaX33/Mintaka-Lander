@@ -37,11 +37,12 @@ void Player::apply_movement(float time, Ground const & grnd)
     sf::Vector2f absPos = trans * _sprite[i].position;
     float const diff = grnd.objRelHeight(absPos);
     if(diff < 0.0f){
-      //TODO do the proper uphill / downhill calculation
       float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
       this->move(0.0f, diff);
       this->_velocity = sf::Vector2f{frictionX, 0.0f};
       auto const to {this->getPosition()};
+
+      //TODO fix this hack-ish uphill/downhill calculation
       if(from.y > to.y){
         this->_velocity.x -= (_velocity.x < 0 ? -0.01f : 0.01f);
       }
