@@ -6,7 +6,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
-#include "BaseException.hpp"
+#include "exception/BaseException.hpp"
 
 int main(int argc, char ** argv)
 {

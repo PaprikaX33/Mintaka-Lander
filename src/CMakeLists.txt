@@ -9,16 +9,18 @@ set(MAIN_SOURCE_FILES
 
 add_subdirectory(include)
 add_subdirectory(exception)
+add_subdirectory(utils)
 
 add_executable(${EXECUTABLE_NAME}
   ${MAIN_SOURCE_FILES}
   ${MAIN_HEADER_FILES}
+  ${UTILITY_HEADER_FILES}
   )
 
 target_include_directories(${EXECUTABLE_NAME}
   PRIVATE
   include
-  exception)
+  ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${EXECUTABLE_NAME}
   PRIVATE

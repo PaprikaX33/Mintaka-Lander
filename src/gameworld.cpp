@@ -4,7 +4,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
-#include "FontDirectory.hpp"
+#include "exception/FontDirectory.hpp"
 #include "Icon.hpp"
 
 GameWorld::GameWorld():
