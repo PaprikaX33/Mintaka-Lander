@@ -99,3 +99,8 @@ void Player::vertical_stop(void)
     _velocity.x -= 0.1f;
   }
 }
+sf::Vector2f Player::axis_projection(sf::Vector2f const & axis)
+{
+  (void)axis;
+  return {1.1f, 2.2f};
+}
