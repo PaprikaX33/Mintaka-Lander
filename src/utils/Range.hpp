@@ -23,10 +23,4 @@ namespace utls
   };
 }
 
-template<typename T>
-utls::Range<T> operator,(utls::Range<T> a, T b)
-{
-  return utls::Range<T>{a.min ,b};
-}
-
 #endif //MINTAKA_UTILS_RANGE_HEAD_HPP
