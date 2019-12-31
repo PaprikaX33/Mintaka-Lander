@@ -6,11 +6,11 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Ground.hpp"
-#include "Colidable.hpp"
+#include "Collidable.hpp"
 
 class Player final : public sf::Drawable,
                      public sf::Transformable,
-                     public Colidable
+                     public Collidable
 {
 private:
   sf::Vector2f _velocity;
