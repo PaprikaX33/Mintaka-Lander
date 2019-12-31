@@ -21,6 +21,11 @@ namespace utls
       max{std::max(std::forward<Ti>(l), std::forward<Ti>(r), comp)}
     {}
   };
+  template<typename T>
+  bool overlap(T const & lf, T const & rg) noexcept
+  {
+    return (lf.min >= rg.min && lf.min <= rg.max) || (lf.max >= rg.min && lf.max <= rg.max);
+  }
 }
 
 #endif //MINTAKA_UTILS_RANGE_HEAD_HPP

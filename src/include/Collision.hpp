@@ -1,7 +1,7 @@
 #ifndef MINTAKA_COLLISION_DETECTION_HEAD_HPP
 #define MINTAKA_COLLISION_DETECTION_HEAD_HPP
-#include "Colidable.hpp"
+#include "Collidable.hpp"
 
-bool collide(Colidable const &, Colidable const &) noexcept;
+bool collide(Collidable const &, Collidable const &) noexcept;
 
 #endif //MINTAKA_COLLISION_DETECTION_HEAD_HPP

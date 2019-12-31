@@ -2,6 +2,8 @@ set(MAIN_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/gameworld.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/icon.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/collision.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ground.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ground_parse.cpp
