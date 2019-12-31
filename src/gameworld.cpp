@@ -7,6 +7,8 @@
 #include "exception/FontDirectory.hpp"
 #include "Icon.hpp"
 
+constexpr char const * fontDir = "./font/unifont.ttf";
+
 GameWorld::GameWorld():
   _window{},
   _primary{sf::FloatRect{0.0f, 0.0f, 1000.0f, 1000.0f}},
@@ -25,7 +27,6 @@ GameWorld::GameWorld():
   _loseText{},
   _state{GameState::RUNNING}
 {
-  char const * const fontDir = "./font/SztyletBd.otf";
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
@@ -90,7 +91,6 @@ GameWorld::GameWorld(char const * grname):
   _loseText{},
   _state{GameState::RUNNING}
 {
-  char const * const fontDir = "./font/SztyletBd.otf";
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
