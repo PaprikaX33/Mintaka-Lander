@@ -19,6 +19,15 @@ Player::Player(void) :
   _sprite[3] = sf::Vertex{pos3, sf::Color::Green};
   _sprite[4] = sf::Vertex{pos0, sf::Color::Green};
   this->setPosition(sf::Vector2f{500.0f, 500.0f});
+  this->_normal = std::vector<sf::Vector2f>{{//RIGHT POLYGON
+                                             utls::normalize(utls::normal_left(pos0 - pos1)),
+                                             utls::normalize(utls::normal_left(pos1 - pos2)),
+                                             utls::normalize(utls::normal_left(pos2 - pos0)),
+                                             //LEFT POLYGON
+                                             utls::normalize(utls::normal_left(pos0 - pos2)),
+                                             utls::normalize(utls::normal_left(pos2 - pos3)),
+                                             utls::normalize(utls::normal_left(pos3 - pos0))
+                                             }};
 }
 
 void Player::reset(void)
