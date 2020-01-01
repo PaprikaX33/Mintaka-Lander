@@ -1,7 +1,6 @@
 #ifndef MINTAKA_UTILS_RANGE_HEAD_HPP
 #define MINTAKA_UTILS_RANGE_HEAD_HPP
 #include <algorithm>
-#include <utility>
 
 namespace utls
 {
@@ -10,15 +9,14 @@ namespace utls
   {
     T min;
     T max;
-    template <typename Ti>
-    constexpr Range(Ti && l, Ti && r) :
-      min{std::min(std::forward<Ti>(l), std::forward<Ti>(r))},
-      max{std::max(std::forward<Ti>(l), std::forward<Ti>(r))}
+    constexpr Range(T const & l, T const & r) :
+      min{std::min(l, r)},
+      max{std::max(l, r)}
     {}
-    template <typename Ti, typename Compare>
-    constexpr Range(Ti && l, Ti && r, Compare comp) :
-      min{std::min(std::forward<Ti>(l), std::forward<Ti>(r), comp)},
-      max{std::max(std::forward<Ti>(l), std::forward<Ti>(r), comp)}
+    template <typename Compare>
+    constexpr Range(T const & l, T const & r, Compare comp) :
+      min{std::min(l, r, comp)},
+      max{std::max(l, r, comp)}
     {}
   };
   template<typename T>
