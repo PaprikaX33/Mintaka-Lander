@@ -8,20 +8,24 @@ namespace utls
   {
     T min;
     T max;
-    explicit constexpr Range(T const & v);
-    constexpr Range(T const & l, T const & r);
+    explicit constexpr Range(T const &);
+    constexpr Range(T const &, T const &);
 
     template <typename Compare>
-    constexpr Range(T const & l, T const & r, Compare comp);
+    constexpr Range(T const &, T const &, Compare);
 
-    constexpr Range & append(T const & v);
-
+    constexpr Range & append(T const &);
     template <typename Compare>
-    constexpr Range & append(T const & v, Compare comp);
+    constexpr Range & append(T const &, Compare);
+
+    constexpr bool contains(T const &) const;
   };
 
-  template<typename T>
-  constexpr bool overlap(Range<T> const & lf, Range<T> const & rg) noexcept;
+  template <typename T>
+  constexpr bool overlap(Range<T> const &, Range<T> const &) noexcept;
+
+  template <typename T>
+  constexpr bool contains(T const &, Range<T> const &) noexcept;
 }
 
 #include "Range.inl"

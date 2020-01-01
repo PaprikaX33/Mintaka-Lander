@@ -35,8 +35,20 @@ inline constexpr utls::Range<T> & utls::Range<T>::append(T const & v, Compare co
   return *this;
 }
 
-template<typename T>
+template <typename T>
+constexpr bool utls::Range<T>::contains(T const & val) const
+{
+  return (val >= min || val <= max);
+}
+
+template <typename T>
 inline constexpr bool utls::overlap(Range<T> const & lf, Range<T> const & rg) noexcept
 {
   return (lf.min >= rg.min && lf.min <= rg.max) || (lf.max >= rg.min && lf.max <= rg.max);
+}
+
+template <typename T>
+constexpr bool utls::contains(T const & val, Range<T> const & rng) noexcept
+{
+  return rng.contains(val);
 }
