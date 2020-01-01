@@ -81,21 +81,34 @@ void Player::vertical_stop(void)
     _velocity.x -= 0.1f;
   }
 }
+
+utls::Range<float> Player::important_x(void) const
+{
+  utls::Range<float> range{pos0.x, pos1.x};
+  range.append(pos2.x);
+  range.append(pos3.x);
+  return range;
+}
 std::vector<utls::Range<float>> Player::axis_projection(sf::Vector2f const & axis) const
 {
   std::vector<utls::Range<float>> vec;
+  auto const & trns = this->getTransform();
+  auto const ipos0 = trns * pos0;
+  auto const ipos1 = trns * pos1;
+  auto const ipos2 = trns * pos2;
+  auto const ipos3 = trns * pos3;
   //RIGHT POLYGON
   {
-    utls::Range<float> range{utls::projection(pos0, axis)};
-    range.append(utls::projection(pos1, axis));
-    range.append(utls::projection(pos2, axis));
+    utls::Range<float> range{utls::projection(ipos0, axis)};
+    range.append(utls::projection(ipos1, axis));
+    range.append(utls::projection(ipos2, axis));
     vec.emplace_back(range);
   }
   //LEFT POLYGON
   {
-    utls::Range<float> range{utls::projection(pos0, axis)};
-    range.append(utls::projection(pos2, axis));
-    range.append(utls::projection(pos3, axis));
+    utls::Range<float> range{utls::projection(ipos0, axis)};
+    range.append(utls::projection(ipos2, axis));
+    range.append(utls::projection(ipos3, axis));
     vec.emplace_back(range);
   }
   return vec;

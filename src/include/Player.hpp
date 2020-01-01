@@ -26,6 +26,7 @@ public:
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
   virtual std::vector<utls::Range<float>> axis_projection(sf::Vector2f const & axis) const override;
+  virtual utls::Range<float> important_x(void) const override;
   void reset(void);
   void apply_movement(float time);
   void vertical_stop(void);
