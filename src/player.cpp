@@ -82,6 +82,11 @@ void Player::vertical_stop(void)
   }
 }
 
+void Player::speed_stop(void)
+{
+  _velocity = sf::Vector2f{0.0f, 0.0f};
+}
+
 utls::Range<float> Player::important_x(void) const
 {
   auto const & trns = this->getTransform();

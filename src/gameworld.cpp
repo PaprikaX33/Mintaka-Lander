@@ -173,6 +173,10 @@ void GameWorld::key_handle(void)
         _state = GameState::LOSE;
         break;
 
+      case sf::Keyboard::B:
+        _player.speed_stop();
+        break;
+
       case sf::Keyboard::P:
         switch(_state){
         case  GameState::PAUSED:

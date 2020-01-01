@@ -30,6 +30,7 @@ public:
   void reset(void);
   void apply_movement(float time);
   void vertical_stop(void);
+  void speed_stop(void);
 };
 
 #endif //MINTAKA_PLAYER_HEAD_HPP
