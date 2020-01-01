@@ -6,9 +6,8 @@
 
 struct Collidable
 {
-  std::vector<sf::Vector2f> _normal;
-  virtual utls::Range<float> axis_projection(sf::Vector2f const & axis) const = 0;
-  virtual ~Collidable(){}
+  virtual std::vector<utls::Range<float>> axis_projection(sf::Vector2f const & axis) const = 0;
+  virtual ~Collidable() = default;
 };
 
 #endif //MINTAKA_COLIDABLE_HEAD_HPP
