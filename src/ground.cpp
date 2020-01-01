@@ -50,6 +50,7 @@ void Ground::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 bool Ground::is_hit(Collidable const & col) const
 {
+  std::vector<std::vector<bool>> cont;
   auto const imp = col.important_x();
   int const lf = static_cast<int>(std::floor(imp.min / 100.0f));
   int const rg = static_cast<int>(std::ceil(imp.max / 100.0f));
@@ -57,6 +58,7 @@ bool Ground::is_hit(Collidable const & col) const
   std::cout << lf << '\t' << rg << '\n';
   int step = lf;
   while(step < rg){
+    std::vector<bool> inc;
     auto const & loc_lf = step < 0 ?
                                  _sprite[0].position :
                                  step > static_cast<int>(_sprite.getVertexCount()) ?
@@ -69,18 +71,34 @@ bool Ground::is_hit(Collidable const & col) const
       _sprite[_sprite.getVertexCount() -1].position :
       _sprite[static_cast<std::size_t>(step + 1)].position;
     auto const difference = ((_anchor * loc_rg) - ( _anchor * loc_lf));
-    auto const axis = utls::normalize(utls::normal_left(difference));
+    auto const axis = utls::normalize(utls::normal_right(difference));
     auto const player_proj = col.axis_projection(axis);
     auto const self_proj = utls::projection(_anchor * loc_lf,  axis);
     std::cout << "diff " << difference.x << ',' << difference.y << '\n';
     std::cout << "axis" << axis.x << ',' << axis.y << '\n';
     for(auto const & i : player_proj) {
-      std::cout << "RNG: " << i.min << ',' << i.max << "\tself: " << self_proj << '\n';
-      if(i.contains(self_proj)){
-        return true;
-      }
+      std::cout << "RNG: " << i.min << ',' << i.max
+                << "\tself: " << self_proj
+                << '\t' <<  (i.contains(self_proj) ? "YES" : "NO")<< '\n';
+      inc.emplace_back(i.contains(self_proj));
     }
+    cont.emplace_back(std::move(inc));
     step++;
   }
-  return false;
+  std::cout << "CONT: ";
+  for(auto const & i : cont){
+    for(auto const & o : i){
+      std::cout << (o ? "YES " : "NO ");
+    }
+  }
+  std::cout << '\n';
+  bool isHit = false;
+  for(auto i = 0u; i < cont[0].size(); i++){
+    bool comp = true;
+    for(auto o = 0u; o < cont.size(); o++){
+      comp = comp && cont[o][i];
+    }
+    isHit = isHit || comp;
+  }
+  return isHit;
 }
