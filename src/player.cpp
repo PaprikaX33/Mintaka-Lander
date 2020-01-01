@@ -1,19 +1,23 @@
 #include <array>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include "utils/Vectors.hpp"
 #include "Player.hpp"
 
 static constexpr std::array<std::size_t, 3> important{0,1,3};
+static auto const pos0 = sf::Vector2f{  0.0f, -10.0f};
+static auto const pos1 = sf::Vector2f{ 10.0f,  10.0f};
+static auto const pos2 = sf::Vector2f{  0.0f,   5.0f};
+static auto const pos3 = sf::Vector2f{-10.0f,  10.0f};
 
 Player::Player(void) :
   _velocity{0.0f, 0.0f},
   _sprite{sf::LineStrip, 5}
 {
-  _sprite[0] = sf::Vertex{sf::Vector2f{10.0f,  0.0f}, sf::Color::Green};
-  _sprite[1] = sf::Vertex{sf::Vector2f{20.0f, 20.0f}, sf::Color::Green};
-  _sprite[2] = sf::Vertex{sf::Vector2f{10.0f, 15.0f}, sf::Color::Green};
-  _sprite[3] = sf::Vertex{sf::Vector2f{ 0.0f, 20.0f}, sf::Color::Green};
-  _sprite[4] = sf::Vertex{sf::Vector2f{10.0f,  0.0f}, sf::Color::Green};
-  this->setOrigin(10.0f, 10.0f);
+  _sprite[0] = sf::Vertex{pos0, sf::Color::Green};
+  _sprite[1] = sf::Vertex{pos1, sf::Color::Green};
+  _sprite[2] = sf::Vertex{pos2, sf::Color::Green};
+  _sprite[3] = sf::Vertex{pos3, sf::Color::Green};
+  _sprite[4] = sf::Vertex{pos0, sf::Color::Green};
   this->setPosition(sf::Vector2f{500.0f, 500.0f});
 }
 
@@ -24,34 +28,12 @@ void Player::reset(void)
   _velocity = sf::Vector2f{0.0f,0.0f};
 }
 
-void Player::apply_movement(float time, Ground const & grnd)
+void Player::apply_movement(float time)
 {
   //TODO Do proper movement
   (void) time;
   auto const from {this->getPosition()};
   this->move(_velocity);
-
-  auto const & trans = this->getTransform();
-  for(auto const & i : important){
-    //TODO add check for ground piercing the open end
-    sf::Vector2f absPos = trans * _sprite[i].position;
-    float const diff = grnd.objRelHeight(absPos);
-    if(diff < 0.0f){
-      float const frictionX = _velocity.x - (_velocity.x < 0 ? -0.01f : 0.01f);
-      this->move(0.0f, diff);
-      this->_velocity = sf::Vector2f{frictionX, 0.0f};
-      auto const to {this->getPosition()};
-
-      //TODO fix this hack-ish uphill/downhill calculation
-      if(from.y > to.y){
-        this->_velocity.x -= (_velocity.x < 0 ? -0.01f : 0.01f);
-      }
-      else {
-        this->_velocity.x += (_velocity.x < 0 ? -0.01f : 0.01f);
-      }
-    }
-  }
-
 }
 
 void Player::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -98,4 +80,46 @@ void Player::vertical_stop(void)
   else{
     _velocity.x -= 0.1f;
   }
+}
+
+void Player::speed_stop(void)
+{
+  _velocity = sf::Vector2f{0.0f, 0.0f};
+}
+
+utls::Range<float> Player::important_x(void) const
+{
+  auto const & trns = this->getTransform();
+  auto const ipos0 = trns * pos0;
+  auto const ipos1 = trns * pos1;
+  auto const ipos2 = trns * pos2;
+  auto const ipos3 = trns * pos3;
+  utls::Range<float> range{ipos0.x, ipos1.x};
+  range.append(ipos2.x);
+  range.append(ipos3.x);
+  return range;
+}
+std::vector<utls::Range<float>> Player::axis_projection(sf::Vector2f const & axis) const
+{
+  std::vector<utls::Range<float>> vec;
+  auto const & trns = this->getTransform();
+  auto const ipos0 = trns * pos0;
+  auto const ipos1 = trns * pos1;
+  auto const ipos2 = trns * pos2;
+  auto const ipos3 = trns * pos3;
+  //RIGHT POLYGON
+  {
+    utls::Range<float> range{utls::projection(ipos0, axis)};
+    range.append(utls::projection(ipos1, axis));
+    range.append(utls::projection(ipos2, axis));
+    vec.emplace_back(range);
+  }
+  //LEFT POLYGON
+  {
+    utls::Range<float> range{utls::projection(ipos0, axis)};
+    range.append(utls::projection(ipos2, axis));
+    range.append(utls::projection(ipos3, axis));
+    vec.emplace_back(range);
+  }
+  return vec;
 }

@@ -4,8 +4,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GameWorld.hpp"
-#include "FontDirectory.hpp"
+#include "exception/FontDirectory.hpp"
 #include "Icon.hpp"
+
+constexpr char const * fontDir = "./font/unifont.ttf";
 
 GameWorld::GameWorld():
   _window{},
@@ -25,7 +27,6 @@ GameWorld::GameWorld():
   _loseText{},
   _state{GameState::RUNNING}
 {
-  char const * const fontDir = "./font/SztyletBd.otf";
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
@@ -90,7 +91,6 @@ GameWorld::GameWorld(char const * grname):
   _loseText{},
   _state{GameState::RUNNING}
 {
-  char const * const fontDir = "./font/SztyletBd.otf";
   if(!_textFont.loadFromFile(fontDir)){
     throw Exc::FontDir{fontDir};
   }
@@ -173,6 +173,10 @@ void GameWorld::key_handle(void)
         _state = GameState::LOSE;
         break;
 
+      case sf::Keyboard::B:
+        _player.speed_stop();
+        break;
+
       case sf::Keyboard::P:
         switch(_state){
         case  GameState::PAUSED:
@@ -252,7 +256,10 @@ void GameWorld::update(void)
                          (-1.0f) * 0.15f * std::sin((2 * static_cast<float>(M_PI) * (90 - angle)) / 360.0f)};
       _player.velocity_add(boost);
     }
-    _player.apply_movement(0.0f, _ground);
+    _player.apply_movement(0.0f);
+    if(_ground.is_hit(_player)){
+      _state = GameState::LOSE;
+    }
   }
 
   std::stringstream stream;

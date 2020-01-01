@@ -2,6 +2,7 @@ set(MAIN_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/gameworld.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/icon.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/vector.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ground.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ground_parse.cpp
@@ -9,16 +10,18 @@ set(MAIN_SOURCE_FILES
 
 add_subdirectory(include)
 add_subdirectory(exception)
+add_subdirectory(utils)
 
 add_executable(${EXECUTABLE_NAME}
   ${MAIN_SOURCE_FILES}
   ${MAIN_HEADER_FILES}
+  ${UTILITY_HEADER_FILES}
   )
 
 target_include_directories(${EXECUTABLE_NAME}
   PRIVATE
   include
-  exception)
+  ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(${EXECUTABLE_NAME}
   PRIVATE

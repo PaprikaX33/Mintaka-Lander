@@ -6,9 +6,11 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Ground.hpp"
+#include "Collidable.hpp"
 
 class Player final : public sf::Drawable,
-                     public sf::Transformable
+                     public sf::Transformable,
+                     public Collidable
 {
 private:
   sf::Vector2f _velocity;
@@ -23,9 +25,12 @@ public:
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
+  virtual std::vector<utls::Range<float>> axis_projection(sf::Vector2f const & axis) const override;
+  virtual utls::Range<float> important_x(void) const override;
   void reset(void);
-  void apply_movement(float time, Ground const &);
+  void apply_movement(float time);
   void vertical_stop(void);
+  void speed_stop(void);
 };
 
 #endif //MINTAKA_PLAYER_HEAD_HPP
