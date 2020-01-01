@@ -38,7 +38,7 @@ inline constexpr utls::Range<T> & utls::Range<T>::append(T const & v, Compare co
 template <typename T>
 constexpr bool utls::Range<T>::contains(T const & val) const
 {
-  return (val >= min || val <= max);
+  return (val >= min && val <= max);
 }
 
 template <typename T>
