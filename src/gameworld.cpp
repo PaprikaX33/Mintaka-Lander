@@ -253,6 +253,9 @@ void GameWorld::update(void)
       _player.velocity_add(boost);
     }
     _player.apply_movement(0.0f);
+    if(_ground.is_hit(_player)){
+      _state = GameState::LOSE;
+    }
   }
 
   std::stringstream stream;
