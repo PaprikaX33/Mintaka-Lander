@@ -1,3 +1,4 @@
+#include <algorithm>
 template <typename T>
 inline constexpr utls::Range<T>::Range(T const & v) :
   min{v},

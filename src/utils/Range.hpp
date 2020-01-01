@@ -1,6 +1,5 @@
 #ifndef MINTAKA_UTILS_RANGE_HEAD_HPP
 #define MINTAKA_UTILS_RANGE_HEAD_HPP
-#include <algorithm>
 
 namespace utls
 {
