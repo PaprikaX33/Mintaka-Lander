@@ -3,6 +3,5 @@ set(MAIN_HEADER_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/Player.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Icon.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Ground.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/Collision.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Collidable.hpp
   CACHE PATH "Main header files")
