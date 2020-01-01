@@ -84,9 +84,14 @@ void Player::vertical_stop(void)
 
 utls::Range<float> Player::important_x(void) const
 {
-  utls::Range<float> range{pos0.x, pos1.x};
-  range.append(pos2.x);
-  range.append(pos3.x);
+  auto const & trns = this->getTransform();
+  auto const ipos0 = trns * pos0;
+  auto const ipos1 = trns * pos1;
+  auto const ipos2 = trns * pos2;
+  auto const ipos3 = trns * pos3;
+  utls::Range<float> range{ipos0.x, ipos1.x};
+  range.append(ipos2.x);
+  range.append(ipos3.x);
   return range;
 }
 std::vector<utls::Range<float>> Player::axis_projection(sf::Vector2f const & axis) const
