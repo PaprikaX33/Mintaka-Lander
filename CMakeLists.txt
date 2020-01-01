@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(MintakaLander VERSION 0.1.6 LANGUAGES C CXX)
+project(MintakaLander VERSION 0.1.7 LANGUAGES C CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE DEBUG)

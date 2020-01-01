@@ -49,6 +49,7 @@ void Ground::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 bool Ground::is_hit(Collidable const & col) const
 {
+  //TODO: Restructure the game, so this vector of vector hack can be removed
   std::vector<std::vector<bool>> cont;
   auto const imp = col.important_x();
   int const lf = static_cast<int>(std::floor(imp.min / 100.0f));
