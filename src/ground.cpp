@@ -71,7 +71,7 @@ bool Ground::is_hit(Collidable const & col) const
         _sprite[static_cast<std::size_t>(step + 1)].position;
       auto const difference = ((_anchor * loc_rg) - ( _anchor * loc_lf));
       auto const axis = utls::normalize(utls::normal_right(difference));
-      auto const player_proj = col.axis_projection(axis);
+      auto const player_proj = col.axis_projection(axis, pol_num);
       auto const self_proj = utls::projection(_anchor * loc_lf,  axis);
       if(!utls::contains(self_proj, player_proj)){
         pass = true;
