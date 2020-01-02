@@ -25,8 +25,11 @@ public:
   sf::Vector2f const & velocity_add(sf::Vector2f const &);
   sf::Vector2f getCenterPoint(void) const;
   sf::FloatRect getBounds(void) const;
-  virtual std::vector<utls::Range<float>> axis_projection(sf::Vector2f const & axis) const override;
-  virtual utls::Range<float> important_x(void) const override;
+
+  //COLLIDABLE
+  virtual std::size_t number_of_object(void) const;
+  virtual utls::Range<float> important_x(std::size_t obj_no) const;
+  virtual utls::Range<float> axis_projection(sf::Vector2f const & axis, std::size_t obj_no) const;
   void reset(void);
   void apply_movement(float time);
   void vertical_stop(void);

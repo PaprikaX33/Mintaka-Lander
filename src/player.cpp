@@ -87,39 +87,55 @@ void Player::speed_stop(void)
   _velocity = sf::Vector2f{0.0f, 0.0f};
 }
 
-utls::Range<float> Player::important_x(void) const
+
+//COLLIDABLE
+std::size_t Player::number_of_object(void) const
 {
-  auto const & trns = this->getTransform();
-  auto const ipos0 = trns * pos0;
-  auto const ipos1 = trns * pos1;
-  auto const ipos2 = trns * pos2;
-  auto const ipos3 = trns * pos3;
-  utls::Range<float> range{ipos0.x, ipos1.x};
-  range.append(ipos2.x);
-  range.append(ipos3.x);
-  return range;
+  return 2u;
 }
-std::vector<utls::Range<float>> Player::axis_projection(sf::Vector2f const & axis) const
+
+utls::Range<float> Player::important_x(std::size_t obj_no) const
 {
-  std::vector<utls::Range<float>> vec;
   auto const & trns = this->getTransform();
   auto const ipos0 = trns * pos0;
-  auto const ipos1 = trns * pos1;
   auto const ipos2 = trns * pos2;
-  auto const ipos3 = trns * pos3;
-  //RIGHT POLYGON
-  {
-    utls::Range<float> range{utls::projection(ipos0, axis)};
-    range.append(utls::projection(ipos1, axis));
-    range.append(utls::projection(ipos2, axis));
-    vec.emplace_back(range);
+  utls::Range<float> temp{ipos0.x, ipos2.x};
+  switch(obj_no){
+  default:
+    return utls::Range<float>{0.0f};
+  case 0: //RIGHT POLYGON
+    {
+      auto const ipos1 = trns * pos1;
+      temp.append(ipos1.x);
+    } break;
+  case 1: //LEFT POLYGON
+    {
+      auto const ipos3 = trns * pos3;
+      temp.append(ipos3.x);
+    } break;
   }
-  //LEFT POLYGON
-  {
-    utls::Range<float> range{utls::projection(ipos0, axis)};
-    range.append(utls::projection(ipos2, axis));
-    range.append(utls::projection(ipos3, axis));
-    vec.emplace_back(range);
+  return temp;
+}
+
+utls::Range<float> Player::axis_projection(sf::Vector2f const & axis, std::size_t obj_no) const
+{
+  auto const & trns = this->getTransform();
+  auto const ipos0 = trns * pos0;
+  auto const ipos2 = trns * pos2;
+  utls::Range<float> range{utls::projection(ipos0, axis), utls::projection(ipos2, axis)};
+  switch(obj_no){
+  default:
+    return utls::Range<float>{0.0f};
+  case 0: //RIGHT POLYGON
+    {
+      auto const ipos1 = trns * pos1;
+      range.append(utls::projection(ipos1, axis));
+    } break;
+  case 1: //LEFT POLYGON
+    {
+      auto const ipos3 = trns * pos3;
+      range.append(utls::projection(ipos3, axis));
+    } break;
   }
-  return vec;
+  return range;
 }
