@@ -47,8 +47,8 @@ private:
   void key_handle(void);
 public:
   GameWorld(void);
-  GameWorld(char const*);
   int run(void);
+  void setGround(char const*);
 };
 
 #endif //MINTAKA_GAME_WORLD_HEAD_HPP
