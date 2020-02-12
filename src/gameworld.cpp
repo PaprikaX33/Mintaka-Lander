@@ -329,3 +329,8 @@ void GameWorld::center_obj(sf::Shape & inObj)
 {
   return ::center_obj(inObj);
 }
+
+void GameWorld::setGround(char const * name)
+{
+  _ground = Ground::generate_file(name);
+}
